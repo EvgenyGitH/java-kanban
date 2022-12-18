@@ -1,15 +1,32 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class TaskManager {
-    int id = 1;
+    private int id = 1;
+
+    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+
+    //создание ID
     protected int creatId (){
         return id++;
     }
 
-    HashMap<Integer, Task> tasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Subtask> subtasks = new HashMap<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskManager that = (TaskManager) o;
+        return id == that.id && Objects.equals(tasks, that.tasks) && Objects.equals(epics, that.epics) && Objects.equals(subtasks, that.subtasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tasks, epics, subtasks);
+    }
 
     //Добавление Задач, Эпиков, Субзадач
     public void saveTask (Task task){
@@ -22,11 +39,43 @@ public class TaskManager {
         int epicId = creatId();
         epics.put(epicId, epic);
     }
-    public void saveSubtask (Subtask subtask){
+    public void saveSubtask (Subtask subtask) {
         subtask.taskStatus = "NEW";
         int subTaskId = creatId();
+        for (Integer epic : epics.keySet()) {
+            if (epic.equals(subtask.epicGroup)){
+          // Epic epicData = epics.get(epic);
+                epics.get(epic).subTaskGroup.add(subTaskId);
+              //  epicData.subTaskGroup.add(subTaskId);
+
+               // epics.put(epic, epics.get(epic));
+            }
+        }
         subtasks.put(subTaskId, subtask);
     }
+
+
+    //проверочный код
+ /*   void print (ArrayList <Integer> subTaskGroup){
+        for(int i: subTaskGroup){
+            System.out.println(i);
+        }
+    }*/
+
+
+    //проверочный код
+   /* void print2 (){
+        for (Integer epicId : epics.keySet()) {
+            System.out.println("Эпики: ");
+            Epic ecipData = epics.get(epicId);
+            System.out.println("ID: " + epicId + " taskName: " + ecipData.taskName + ", taskDescription: " +
+                    ecipData.taskDescription + ", taskStatus: " + ecipData.taskStatus);
+            for(int i: ecipData.subTaskGroup) {
+                System.out.println(i);
+
+                        }
+        }
+    }*/
 
 
     //Получение списка всех задач.
@@ -158,6 +207,18 @@ public class TaskManager {
                 Subtask data = subtasks.get(id);
                 System.out.println("Задача удалена: ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
                         data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
+
+                for (Integer epic : epics.keySet()) {
+                    if (epic.equals(data.epicGroup)){
+                        Epic epicData = epics.get(epic); // !!! здесь проблема , получаю код с пустым аррейлистом
+                            for (int i = 0; i < epicData.subTaskGroup.size(); i++) {
+                            if (epicData.subTaskGroup.get(i) == id) {
+                                epicData.subTaskGroup.remove(i);
+                            }
+                        }
+                    }
+                }
+
                 subtasks.remove(iDnumber);
                 statusUpdate();
                 break;
