@@ -37,15 +37,15 @@ public class Main {
 
         //Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
         System.out.println("---3---");
-      //  Epic updateEpic1 = new Epic("Приготовить коктейль Cuba Libre", "Купить ингредиенты в соответствии с рецептом", "NEW");
-      //  Subtask updateSubtask2 = new Subtask( "КУПИТЬ ЛЕД", "Воду налить в форму и поставить в морозилку", "DONE", 2 );
+        Epic updateEpic1 = new Epic("Приготовить коктейль Cuba Libre", "Купить ингредиенты в соответствии с рецептом", "NEW");
+        Subtask updateSubtask2 = new Subtask( "КУПИТЬ ЛЕД", "Воду налить в форму и поставить в морозилку", "DONE", 2 );
      //   Subtask updateSubtask1 = new Subtask( "Купить Ром/Колу", "Купить 1 литр/2 литра", "DONE", 2);
-     //   taskManager.updateById(2, updateEpic1);
-      //  taskManager.updateById(4, updateSubtask2);
+        taskManager.updateById(2, updateEpic1);
+        taskManager.updateById(4, updateSubtask2);
       //  taskManager.updateById(3, updateSubtask1);
 
-        Subtask updateSubtask3 = new Subtask( "Купить Сливки/Молоко", "Купить 1 литр/2 литра", "DONE", 5);
-        taskManager.updateById(6, updateSubtask3);
+       // Subtask updateSubtask3 = new Subtask( "Купить Сливки/Молоко", "Купить 1 литр/2 литра", "DONE", 5);
+       // taskManager.updateById(6, updateSubtask3);
 
         taskManager.printAllTask();
 
@@ -61,6 +61,7 @@ public class Main {
         taskManager.print(epic1.subTaskGroup);
         System.out.println("---D---");
         taskManager.print2();
+        System.out.println("---Del---");
         taskManager.removeTaskById (3);
         System.out.println("---D---");
         taskManager.print(epic1.subTaskGroup);

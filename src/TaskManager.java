@@ -15,7 +15,6 @@ public class TaskManager {
     }
 
 
-
     //Добавление Задач, Эпиков, Субзадач
     public void saveTask (Task task){
         task.taskStatus = "NEW";
@@ -36,7 +35,6 @@ public class TaskManager {
           // Epic epicData = epics.get(epic);
                 epics.get(epic).subTaskGroup.add(subTaskId);
               //  epicData.subTaskGroup.add(subTaskId);
-
                // epics.put(epic, epics.get(epic));
             }
         }
@@ -44,7 +42,7 @@ public class TaskManager {
     }
 
 
-    //проверочный код
+    //проверочный код -- удалить
    void print (ArrayList <Integer> subTaskGroup){
         for(int i: subTaskGroup){
             System.out.println(i);
@@ -52,7 +50,7 @@ public class TaskManager {
     }
 
 
-    //проверочный код
+    //проверочный код -- удалить
    void print2 (){
         for (Integer epicId : epics.keySet()) {
             System.out.println("Эпики: ");
@@ -61,8 +59,7 @@ public class TaskManager {
                     ecipData.taskDescription + ", taskStatus: " + ecipData.taskStatus);
             for(int i: ecipData.subTaskGroup) {
                 System.out.println(i);
-
-                        }
+            }
         }
     }
 
@@ -103,7 +100,7 @@ public class TaskManager {
     }
 
     //Получение по идентификатору.
-    public void getTaskById (int iDnumber) {
+    public void getTaskById (Integer iDnumber) {
         System.out.println("Поиск по номеру ID:");
         for (Integer id : tasks.keySet()) {
             if (id.equals(iDnumber)) {
@@ -134,24 +131,40 @@ public class TaskManager {
         System.out.println("Обновление данных по номеру ID:");
         for (Integer id : tasks.keySet()) {
             if (id.equals(idUpdate)) {
-                Task data = (Task)updateDataById;
-                tasks.put(idUpdate,data);
+                Task updateData = (Task) updateDataById;
+                Task data = tasks.get(id);
+                data.taskName =  updateData.taskName;
+                data.taskDescription =  updateData.taskDescription;
+                data.taskStatus =  updateData.taskStatus;
+                //Task data = (Task)updateDataById; - удалить
+              //  tasks.put(idUpdate,data); - удалить
                 System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
                         data.taskDescription + ", taskStatus: " + data.taskStatus);
             }
         }
         for (Integer id : epics.keySet()) {
             if (id.equals(idUpdate)) {
-                Epic data = (Epic) updateDataById;
-                epics.put(idUpdate,data);
+                Epic updateData = (Epic) updateDataById;
+                Epic data = epics.get(id);
+                data.taskName =  updateData.taskName;
+                data.taskDescription =  updateData.taskDescription;
+                data.taskStatus =  updateData.taskStatus;
+                //Epic data = (Epic) updateDataById; - удалить
+                //epics.put(idUpdate,data); - удалить
                 System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
                         data.taskDescription + ", taskStatus: " + data.taskStatus);
             }
         }
         for (Integer id : subtasks.keySet()) {
             if (id.equals(idUpdate)) {
-                Subtask data = (Subtask) updateDataById;
-                subtasks.put(idUpdate,data);
+                Subtask updateData = (Subtask) updateDataById;
+                Subtask data = subtasks.get(id);
+                data.taskName =  updateData.taskName;
+                data.taskDescription =  updateData.taskDescription;
+                data.taskStatus =  updateData.taskStatus;
+                data.epicGroup = updateData.epicGroup;
+              //  Subtask data = (Subtask) updateDataById; - удалить
+              //  subtasks.put(idUpdate,data); - удалить
                 statusUpdate();
                 System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
                         data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
@@ -160,7 +173,7 @@ public class TaskManager {
     }
 
     //Удаление по идентификатору.
-    public void removeTaskById (int iDnumber) {
+    public void removeTaskById (Integer iDnumber) {
         System.out.println("Удаление по номеру ID:" + iDnumber);
 
         for (Integer id : tasks.keySet()) {
@@ -197,16 +210,12 @@ public class TaskManager {
                 System.out.println("Задача удалена: ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
                         data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
 
-              //  for (Integer epic : epics.keySet()) {
-              //      if (epic.equals(data.epicGroup)){
-                        Epic epicData = epics.get(data.epicGroup); // !!! здесь проблема , получаю код с пустым аррейлистом
-                            for (int i = 0; i < epicData.subTaskGroup.size(); i++) {
-                            if (epicData.subTaskGroup.get(i) == id) {
-                                epicData.subTaskGroup.remove(i);
-                            }
-                        }
-              //      }
-             //   }
+                Epic epicData = epics.get(data.epicGroup);
+                for (int i = 0; i < epicData.subTaskGroup.size(); i++) {
+                    if (epicData.subTaskGroup.get(i) == id) {
+                        epicData.subTaskGroup.remove(i);
+                    }
+                }
 
                 subtasks.remove(iDnumber);
                 statusUpdate();
@@ -267,16 +276,17 @@ public class TaskManager {
 
             if (countDone>0 && countNew==0){
                 dataEpic.taskStatus = "DONE";
-                Epic epicsUpdate = new Epic(dataEpic.taskName, dataEpic.taskDescription, dataEpic.taskStatus);
-                epics.put(idEpic, epicsUpdate);
+         //       Epic epicsUpdate = new Epic(dataEpic.taskName, dataEpic.taskDescription, dataEpic.taskStatus);
+         //       epics.put(idEpic, epicsUpdate);
             } else if (countNew>0 && countDone==0){
                 dataEpic.taskStatus = "NEW";
-                Epic epicsUpdate = new Epic(dataEpic.taskName, dataEpic.taskDescription, dataEpic.taskStatus);
-                epics.put(idEpic, epicsUpdate);
+
+         //       Epic epicsUpdate = new Epic(dataEpic.taskName, dataEpic.taskDescription, dataEpic.taskStatus);
+         //       epics.put(idEpic, epicsUpdate);
             } else {
                 dataEpic.taskStatus = "IN_PROGRESS";
-                Epic epicsUpdate = new Epic(dataEpic.taskName, dataEpic.taskDescription, dataEpic.taskStatus);
-                epics.put(idEpic, epicsUpdate);
+         //       Epic epicsUpdate = new Epic(dataEpic.taskName, dataEpic.taskDescription, dataEpic.taskStatus);
+         //       epics.put(idEpic, epicsUpdate);
             }
             newDone.clear();
             countDone = 0;
