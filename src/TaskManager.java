@@ -15,23 +15,12 @@ public class TaskManager {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TaskManager that = (TaskManager) o;
-        return id == that.id && Objects.equals(tasks, that.tasks) && Objects.equals(epics, that.epics) && Objects.equals(subtasks, that.subtasks);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, tasks, epics, subtasks);
-    }
 
     //Добавление Задач, Эпиков, Субзадач
     public void saveTask (Task task){
         task.taskStatus = "NEW";
         int taskId = creatId();
+        task.idTask = taskId; // есть ли необходимость в idTask? мы же используем в качестве ID сгенерированный ключ id для Hashmap.
         tasks.put(taskId, task);
     }
     public void saveEpic (Epic epic){
@@ -56,15 +45,15 @@ public class TaskManager {
 
 
     //проверочный код
- /*   void print (ArrayList <Integer> subTaskGroup){
+   void print (ArrayList <Integer> subTaskGroup){
         for(int i: subTaskGroup){
             System.out.println(i);
         }
-    }*/
+    }
 
 
     //проверочный код
-   /* void print2 (){
+   void print2 (){
         for (Integer epicId : epics.keySet()) {
             System.out.println("Эпики: ");
             Epic ecipData = epics.get(epicId);
@@ -75,7 +64,7 @@ public class TaskManager {
 
                         }
         }
-    }*/
+    }
 
 
     //Получение списка всех задач.
@@ -208,16 +197,16 @@ public class TaskManager {
                 System.out.println("Задача удалена: ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
                         data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
 
-                for (Integer epic : epics.keySet()) {
-                    if (epic.equals(data.epicGroup)){
-                        Epic epicData = epics.get(epic); // !!! здесь проблема , получаю код с пустым аррейлистом
+              //  for (Integer epic : epics.keySet()) {
+              //      if (epic.equals(data.epicGroup)){
+                        Epic epicData = epics.get(data.epicGroup); // !!! здесь проблема , получаю код с пустым аррейлистом
                             for (int i = 0; i < epicData.subTaskGroup.size(); i++) {
                             if (epicData.subTaskGroup.get(i) == id) {
                                 epicData.subTaskGroup.remove(i);
                             }
                         }
-                    }
-                }
+              //      }
+             //   }
 
                 subtasks.remove(iDnumber);
                 statusUpdate();
