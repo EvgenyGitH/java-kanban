@@ -304,19 +304,19 @@ public class InMemoryTaskManager implements TaskManager {
     //отметка о просмотре
     public void getTask(Task task){
         inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
-      //  inMemoryHistoryManager.historyTask.add(task);
+
         inMemoryHistoryManager.historyList.add(task.idTask);
         inMemoryHistoryManager.add(task);
     }
     public void getEpic(Task task) {
         inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
-     //   inMemoryHistoryManager.historyTask.add(task);
+
         inMemoryHistoryManager.historyList.add(task.idTask);
         inMemoryHistoryManager.add(task);
     }
     public void getSubtask(Task task){
         inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
-     //   inMemoryHistoryManager.historyTask.add(task);
+
         inMemoryHistoryManager.historyList.add(task.idTask);
         inMemoryHistoryManager.add(task);
     }
