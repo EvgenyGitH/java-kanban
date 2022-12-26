@@ -1,3 +1,5 @@
+package manager;
+
 public interface TaskManager {
 
     //Получение списка всех задач.

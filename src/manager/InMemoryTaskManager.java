@@ -1,7 +1,12 @@
+package manager;
+
+import task.Epic;
+import task.StatusTask;
+import task.Subtask;
+import task.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
@@ -23,24 +28,24 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление Задач, Эпиков, Субзадач
     public void saveTask (Task task){
-        task.taskStatus = StatusTask.NEW;
+        task.setTaskStatus(StatusTask.NEW);
         int taskId = creatId();
-        task.idTask = taskId; // есть ли необходимость в idTask? мы же используем в качестве ID сгенерированный ключ id для Hashmap.
+        task.setIdTask(taskId); // есть ли необходимость в idTask? мы же используем в качестве ID сгенерированный ключ id для Hashmap.
         tasks.put(taskId, task);
     }
     public void saveEpic (Epic epic){
-        epic.taskStatus = StatusTask.NEW;
+        epic.setTaskStatus(StatusTask.NEW);
         int epicId = creatId();
-        epic.idTask = epicId;
+        epic.setIdTask(epicId);
         epics.put(epicId, epic);
     }
     public void saveSubtask (Subtask subtask) {
-        subtask.taskStatus = StatusTask.NEW;
+        subtask.setTaskStatus(StatusTask.NEW);
         int subTaskId = creatId();
-        subtask.idTask = subTaskId;
+        subtask.setIdTask(subTaskId);
         for (Integer epic : epics.keySet()) {
-            if (epic.equals(subtask.epicGroup)){
-                epics.get(epic).subTaskGroup.add(subTaskId);
+            if (epic.equals(subtask.getEpicGroup())){
+                epics.get(epic).getSubTaskGroup().add(subTaskId); // ???
             }
         }
         subtasks.put(subTaskId, subtask);
@@ -60,9 +65,9 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer epicId : epics.keySet()) {
             System.out.println("Эпики: ");
             Epic ecipData = epics.get(epicId);
-            System.out.println("ID: " + epicId + " taskName: " + ecipData.taskName + ", taskDescription: " +
-                    ecipData.taskDescription + ", taskStatus: " + ecipData.taskStatus);
-            for(int i: ecipData.subTaskGroup) {
+            System.out.println("ID: " + epicId + " taskName: " + ecipData.getTaskName() + ", taskDescription: " +
+                    ecipData.getTaskDescription() + ", taskStatus: " + ecipData.getTaskStatus());
+            for(int i: ecipData.getSubTaskGroup()) {
                 System.out.println(i);
             }
         }
@@ -75,22 +80,22 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Задачи: ");
         for (Integer taskId : tasks.keySet()) {
             Task taskData = tasks.get(taskId);
-            System.out.println("ID: " + taskId + " taskName: " + taskData.taskName + ", taskDescription: " +
-                    taskData.taskDescription + ", taskStatus: " + taskData.taskStatus);
+            System.out.println("ID: " + taskId + " taskName: " + taskData.getTaskName() + ", taskDescription: " +
+                    taskData.getTaskDescription() + ", taskStatus: " + taskData.getTaskStatus());
         }
         for (Integer epicId : epics.keySet()) {
             System.out.println("Эпики: ");
             Epic ecipData = epics.get(epicId);
-            System.out.println("ID: " + epicId + " taskName: " + ecipData.taskName + ", taskDescription: " +
-                    ecipData.taskDescription + ", taskStatus: " + ecipData.taskStatus);
+            System.out.println("ID: " + epicId + " taskName: " + ecipData.getTaskName() + ", taskDescription: " +
+                    ecipData.getTaskDescription() + ", taskStatus: " + ecipData.getTaskStatus());
 
             System.out.println("Субзадачи:");
             for (Integer subTaskId : subtasks.keySet()) {
                 Subtask subTaskData = subtasks.get(subTaskId);
-                if (subTaskData.epicGroup == epicId){
-                    System.out.println("ID: " + subTaskId + " taskName: " + subTaskData.taskName +
-                            ", taskDescription: " + subTaskData.taskDescription +
-                            ", taskStatus: " + subTaskData.taskStatus + " epicGroup: " + subTaskData.epicGroup);
+                if (subTaskData.getEpicGroup() == epicId){
+                    System.out.println("ID: " + subTaskId + " taskName: " + subTaskData.getTaskName() +
+                            ", taskDescription: " + subTaskData.getTaskDescription() +
+                            ", taskStatus: " + subTaskData.getTaskStatus() + " epicGroup: " + subTaskData.getEpicGroup());
                 }
             }
         }
@@ -112,24 +117,24 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer id : tasks.keySet()) {
             if (id.equals(iDnumber)) {
                 Task data = tasks.get(id);
-                System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus);
+                System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 getTask(data);
             }
         }
         for (Integer id : epics.keySet()) {
             if (id.equals(iDnumber)) {
                 Epic data = epics.get(id);
-                System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus);
+                System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 getEpic(data);
             }
         }
         for (Integer id : subtasks.keySet()) {
             if (id.equals(iDnumber)) {
                 Subtask data = subtasks.get(id);
-                System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
+                System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus() + " epicGroup: " + data.getEpicGroup());
                 getSubtask(data);
             }
         }
@@ -144,41 +149,44 @@ public class InMemoryTaskManager implements TaskManager {
             if (id.equals(idUpdate)) {
                 Task updateData = (Task) updateDataById;
                 Task data = tasks.get(id);
-                data.taskName =  updateData.taskName;
-                data.taskDescription =  updateData.taskDescription;
-                data.taskStatus =  updateData.taskStatus;
-                //Task data = (Task)updateDataById; - удалить
+                data.setIdTask(id);
+                data.setTaskName(updateData.getTaskName());
+                data.setTaskDescription(updateData.getTaskDescription());
+                data.setTaskStatus(updateData.getTaskStatus());
+                //task.Task data = (task.Task)updateDataById; - удалить
               //  tasks.put(idUpdate,data); - удалить
-                System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus);
+                System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
             }
         }
         for (Integer id : epics.keySet()) {
             if (id.equals(idUpdate)) {
                 Epic updateData = (Epic) updateDataById;
                 Epic data = epics.get(id);
-                data.taskName =  updateData.taskName;
-                data.taskDescription =  updateData.taskDescription;
-                data.taskStatus =  updateData.taskStatus;
-                //Epic data = (Epic) updateDataById; - удалить
+                data.setIdTask(id);
+                data.setTaskName(updateData.getTaskName());
+                data.setTaskDescription(updateData.getTaskDescription());
+                data.setTaskStatus(updateData.getTaskStatus());
+                //task.Epic data = (task.Epic) updateDataById; - удалить
                 //epics.put(idUpdate,data); - удалить
-                System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus);
+                System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
             }
         }
         for (Integer id : subtasks.keySet()) {
             if (id.equals(idUpdate)) {
                 Subtask updateData = (Subtask) updateDataById;
                 Subtask data = subtasks.get(id);
-                data.taskName =  updateData.taskName;
-                data.taskDescription =  updateData.taskDescription;
-                data.taskStatus =  updateData.taskStatus;
-                data.epicGroup = updateData.epicGroup;
-              //  Subtask data = (Subtask) updateDataById; - удалить
+                data.setIdTask(id);
+                data.setTaskName(updateData.getTaskName());
+                data.setTaskDescription(updateData.getTaskDescription());
+                data.setTaskStatus(updateData.getTaskStatus());
+                data.setEpicGroup(updateData.getEpicGroup());
+              //  task.Subtask data = (task.Subtask) updateDataById; - удалить
               //  subtasks.put(idUpdate,data); - удалить
                 statusUpdate();
-                System.out.println("ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
+                System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus() + " epicGroup: " + data.getEpicGroup());
             }
         }
     }
@@ -191,8 +199,8 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer id : tasks.keySet()) {
             if (id.equals(iDnumber)) {
                 Task data = tasks.get(id);
-                System.out.println("Задача удалена: ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus);
+                System.out.println("Задача удалена: ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 tasks.remove(iDnumber);
                 break;
             }
@@ -203,12 +211,12 @@ public class InMemoryTaskManager implements TaskManager {
                 ArrayList <Integer> removeId = new ArrayList<>();
                 for (Integer idSubTask : subtasks.keySet()) {
                     Subtask dataSubTask = subtasks.get(idSubTask);
-                    if (dataSubTask.epicGroup == iDnumber) {
+                    if (dataSubTask.getEpicGroup() == iDnumber) {
                         removeId.add(idSubTask);
                     }
                 }
-                System.out.println("Задача удалена: ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus);
+                System.out.println("Задача удалена: ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 for(int i:removeId){
                     subtasks.remove(i);
                 }
@@ -219,13 +227,13 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer id : subtasks.keySet()) {
             if (id.equals(iDnumber)) {
                 Subtask data = subtasks.get(id);
-                System.out.println("Задача удалена: ID: " + id + " taskName: " + data.taskName + ", taskDescription: " +
-                        data.taskDescription + ", taskStatus: " + data.taskStatus + " epicGroup: " + data.epicGroup);
+                System.out.println("Задача удалена: ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
+                        data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus() + " epicGroup: " + data.getEpicGroup());
 
-                Epic epicData = epics.get(data.epicGroup);
-                for (int i = 0; i < epicData.subTaskGroup.size(); i++) {
-                    if (epicData.subTaskGroup.get(i) == id) {
-                        epicData.subTaskGroup.remove(i);
+                Epic epicData = epics.get(data.getEpicGroup());
+                for (int i = 0; i < epicData.getSubTaskGroup().size(); i++) {
+                    if (epicData.getSubTaskGroup().get(i) == id) {
+                        epicData.getSubTaskGroup().remove(i);
                     }
                 }
 
@@ -242,16 +250,16 @@ public class InMemoryTaskManager implements TaskManager {
     public void printEpicSubtask(int epicIdNumber ) {
         for (Integer epicId : epics.keySet()) {
             if (epicIdNumber == epicId) {
-                Epic ecipData = epics.get(epicId);
-                System.out.println("Эпик: ID: " + epicId + " taskName: " + ecipData.taskName + ", taskDescription: " +
-                        ecipData.taskDescription + ", taskStatus: " + ecipData.taskStatus);
+                Epic epicData = epics.get(epicId);
+                System.out.println("Эпик: ID: " + epicId + " taskName: " + epicData.getTaskName() + ", taskDescription: " +
+                        epicData.getTaskDescription() + ", taskStatus: " + epicData.getTaskStatus());
                 System.out.println("Субзадачи:");
                 for (Integer subTaskId : subtasks.keySet()) {
                     Subtask subTaskData = subtasks.get(subTaskId);
-                    if (subTaskData.epicGroup == epicId) {
-                        System.out.println("ID: " + subTaskId + " taskName: " + subTaskData.taskName +
-                                ", taskDescription: " + subTaskData.taskDescription +
-                                ", taskStatus: " + subTaskData.taskStatus + " epicGroup: " + subTaskData.epicGroup);
+                    if (subTaskData.getEpicGroup() == epicId) {
+                        System.out.println("ID: " + subTaskId + " taskName: " + subTaskData.getTaskName() +
+                                ", taskDescription: " + subTaskData.getTaskDescription() +
+                                ", taskStatus: " + subTaskData.getTaskStatus() + " epicGroup: " + subTaskData.getEpicGroup());
                     }
                 }
             }
@@ -269,12 +277,12 @@ public class InMemoryTaskManager implements TaskManager {
             Epic dataEpic = epics.get(idEpic);
             for (Integer idSubtask : subtasks.keySet()) {
                 Subtask dataSubtask = subtasks.get(idSubtask);
-                if (dataSubtask.epicGroup == idEpic) {
-                    if (dataSubtask.taskStatus != null) {
-                        if (StatusTask.DONE==dataSubtask.taskStatus) {
+                if (dataSubtask.getEpicGroup() == idEpic) {
+                    if (dataSubtask.getTaskStatus() != null) {
+                        if (StatusTask.DONE==dataSubtask.getTaskStatus()) {
                             newDone.add("D");
                         }
-                        if (StatusTask.NEW==dataSubtask.taskStatus) {
+                        if (StatusTask.NEW==dataSubtask.getTaskStatus()) {
                             newDone.add("N");
                         }
                     }
@@ -289,11 +297,11 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
             if (countDone>0 && countNew==0){
-                dataEpic.taskStatus = StatusTask.DONE;
+                dataEpic.setTaskStatus(StatusTask.DONE);
             } else if (countNew>0 && countDone==0){
-                dataEpic.taskStatus = StatusTask.NEW;
+                dataEpic.setTaskStatus(StatusTask.NEW);
             } else {
-                dataEpic.taskStatus = StatusTask.IN_PROGRESS;
+                dataEpic.setTaskStatus(StatusTask.IN_PROGRESS);
             }
             newDone.clear();
             countDone = 0;
@@ -305,19 +313,19 @@ public class InMemoryTaskManager implements TaskManager {
     public void getTask(Task task){
         inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
 
-        inMemoryHistoryManager.historyList.add(task.idTask);
+        inMemoryHistoryManager.historyList.add(task.getIdTask());
         inMemoryHistoryManager.add(task);
     }
     public void getEpic(Task task) {
         inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
 
-        inMemoryHistoryManager.historyList.add(task.idTask);
+        inMemoryHistoryManager.historyList.add(task.getIdTask());
         inMemoryHistoryManager.add(task);
     }
     public void getSubtask(Task task){
         inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
 
-        inMemoryHistoryManager.historyList.add(task.idTask);
+        inMemoryHistoryManager.historyList.add(task.getIdTask());
         inMemoryHistoryManager.add(task);
     }
 
