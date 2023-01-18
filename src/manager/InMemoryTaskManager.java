@@ -30,7 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void saveTask (Task task){
         task.setTaskStatus(StatusTask.NEW);
         int taskId = creatId();
-        task.setIdTask(taskId); // есть ли необходимость в idTask? мы же используем в качестве ID сгенерированный ключ id для Hashmap.
+        task.setIdTask(taskId);
         tasks.put(taskId, task);
     }
     public void saveEpic (Epic epic){
@@ -202,6 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("Задача удалена: ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
                         data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 tasks.remove(iDnumber);
+                inMemoryHistoryManager.remove(iDnumber);
                 break;
             }
         }
@@ -213,6 +214,7 @@ public class InMemoryTaskManager implements TaskManager {
                     Subtask dataSubTask = subtasks.get(idSubTask);
                     if (dataSubTask.getEpicGroup() == iDnumber) {
                         removeId.add(idSubTask);
+                        inMemoryHistoryManager.remove(dataSubTask.getIdTask());
                     }
                 }
                 System.out.println("Задача удалена: ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
@@ -221,6 +223,7 @@ public class InMemoryTaskManager implements TaskManager {
                     subtasks.remove(i);
                 }
                 epics.remove(iDnumber);
+                inMemoryHistoryManager.remove(iDnumber);
                 break;
             }
         }
@@ -236,8 +239,8 @@ public class InMemoryTaskManager implements TaskManager {
                         epicData.getSubTaskGroup().remove(i);
                     }
                 }
-
                 subtasks.remove(iDnumber);
+                inMemoryHistoryManager.remove(iDnumber);
                 statusUpdate();
                 break;
             }
@@ -311,21 +314,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     //отметка о просмотре
     public void getTask(Task task){
-        inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
-
-        inMemoryHistoryManager.historyList.add(task.getIdTask());
         inMemoryHistoryManager.add(task);
     }
     public void getEpic(Task task) {
-        inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
-
-        inMemoryHistoryManager.historyList.add(task.getIdTask());
         inMemoryHistoryManager.add(task);
     }
     public void getSubtask(Task task){
-        inMemoryHistoryManager.checkListLimit(inMemoryHistoryManager.historyListLimit);
-
-        inMemoryHistoryManager.historyList.add(task.getIdTask());
         inMemoryHistoryManager.add(task);
     }
 

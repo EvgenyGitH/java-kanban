@@ -5,6 +5,8 @@ import task.StatusTask;
 import task.Subtask;
 import task.Task;
 
+import java.util.LinkedList;
+
 public class Main {
 
     //Тестовый класс
@@ -16,22 +18,29 @@ public class Main {
 
         Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         inMemoryTaskManager.saveTask (task1);
+        Task task2 = new Task("Заказать пиццу ", "Позвонить в ресторан", StatusTask.NEW);
+        inMemoryTaskManager.saveTask (task2);
 
 
         Epic epic1 = new Epic ("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом",StatusTask.NEW);
-        Subtask subtask1 = new Subtask( "Купить Ром/Колу", "Купить 1 литр/2 литра", StatusTask.NEW, 2 );
-        Subtask subtask2 = new Subtask( "Приготовить лед", "Воду налить в форму и поставить в морозилку", StatusTask.NEW, 2 );
+        Subtask subtask1 = new Subtask( "Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 3 );
+        Subtask subtask2 = new Subtask( "Приготовить лед", "Воду налить в форму и поставить в морозилку", StatusTask.NEW, 3 );
+        Subtask subtask3 = new Subtask( "Купить Колу", "Купить 2 литра", StatusTask.NEW, 3 );
         inMemoryTaskManager.saveEpic(epic1);
         inMemoryTaskManager.saveSubtask(subtask1);
         inMemoryTaskManager.saveSubtask(subtask2);
-
-        Epic epic2 = new Epic ("Приготовить мороженое", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
-        Subtask subtask3 = new Subtask( "Купить Сливки/Молоко", "Купить 1 литр/2 литра", StatusTask.NEW, 5);
-        inMemoryTaskManager.saveEpic(epic2);
         inMemoryTaskManager.saveSubtask(subtask3);
 
+
+        Epic epic2 = new Epic ("Приготовить мороженое", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+      //  Subtask subtask3 = new Subtask( "Купить Сливки/Молоко", "Купить 1 литр/2 литра", StatusTask.NEW, 5);
+        inMemoryTaskManager.saveEpic(epic2);
+    //    inMemoryTaskManager.saveSubtask(subtask3);
+
+
+
         //печать всех задач
-        System.out.println("---1---");
+        System.out.println("---printAllTask---");
         inMemoryTaskManager.printAllTask();
 
 
@@ -39,30 +48,37 @@ public class Main {
         //inMemoryTaskManager.removeAllTask();
 
         //Получение по идентификатору.
-        System.out.println("---2---");
+        System.out.println("--------------------------------");
+        System.out.println("---ТЗ-5 -добавление запросов----");
+        System.out.println("--------------------------------");
 
         inMemoryTaskManager.getTaskById(2);
         inMemoryHistoryManager.getHistory();
-        System.out.println("---ТЗ-добавление запросов---");
+        System.out.println("-------");
         inMemoryTaskManager.getTaskById(1); // 1 - 2, 2 - 3, 3 - 1 , 4 - 2, 5 - 1 , 6 - 3
-        inMemoryHistoryManager.getHistory();
-        System.out.println("-------");
-        inMemoryTaskManager.getTaskById(2);
-        inMemoryHistoryManager.getHistory();
-        System.out.println("-------");
-        inMemoryTaskManager.getTaskById(2);
-        inMemoryHistoryManager.getHistory();
-        System.out.println("-------");
-        inMemoryTaskManager.getTaskById(1);
         inMemoryHistoryManager.getHistory();
         System.out.println("-------");
         inMemoryTaskManager.getTaskById(3);
         inMemoryHistoryManager.getHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(4);
+        inMemoryTaskManager.getTaskById(2);
         inMemoryHistoryManager.getHistory();
         System.out.println("-------");
         inMemoryTaskManager.getTaskById(6);
+        inMemoryHistoryManager.getHistory();
+        System.out.println("-------");
+        inMemoryTaskManager.getTaskById(5);
+        inMemoryHistoryManager.getHistory();
+        System.out.println("-------");
+        inMemoryTaskManager.getTaskById(2);
+        inMemoryHistoryManager.getHistory();
+        System.out.println("-------");
+        inMemoryTaskManager.getTaskById(6);
+        inMemoryHistoryManager.getHistory();
+        System.out.println("-------");
+
+        System.out.println("---ТЗ-5-удаление--");
+        inMemoryTaskManager.removeTaskById (3);
         inMemoryHistoryManager.getHistory();
         System.out.println("-------");
      //   inMemoryTaskManager.getTaskById(5);
@@ -70,15 +86,15 @@ public class Main {
        // inMemoryTaskManager.getTaskById(4);
        // inMemoryTaskManager.getTaskById(6);
 
-        System.out.println("---ТЗ-4-начало--");
+        System.out.println("---ТЗ-5-Итог--");
         inMemoryHistoryManager.getHistory();
 
 
-        System.out.println("---ТЗ-4---");
+        System.out.println("---ТЗ-5---");
 
 
-
-
+        LinkedList<Node> linkedList = new LinkedList<>();
+/*
 
 
 
