@@ -6,23 +6,46 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    static Node<Task> head;
-    static Node<Task> tail;
-    int size=0;
+    private Node<Task> head;
+    private Node<Task> tail;
+    private int size = 0;
+    private Map<Integer, Node> historyMap = new HashMap<>();
 
-    Map<Integer, Node> historyMap = new HashMap<>();
+    public Node<Task> getHead() {
+        return head;
+    }
+
+    public void setHead(Node<Task> head) {
+        this.head = head;
+    }
+
+    public Node<Task> getTail() {
+        return tail;
+    }
+
+    public void setTail(Node<Task> tail) {
+        this.tail = tail;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     public Node<Task> linkLast(Task task){
-        Node<Task> oldTail = tail;
+        Node<Task> oldTail = getTail(); //tail;
         Node<Task> newNode = new Node<>(oldTail, task, null);
-        tail = newNode;
+        setTail(newNode); //tail = newNode;
         if (oldTail == null){
-            head = newNode;
+            setHead(newNode);//head = newNode;
         } else {
             oldTail.next = newNode;
         }
         historyMap.put(task.getIdTask(),newNode);
-        size++;
+        setSize(getSize()+1);
         return newNode;
     }
 
@@ -38,7 +61,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public ArrayList<Task> getTasks(){
         ArrayList<Task> historyTaskData = new ArrayList<>();
-        Node<Task> curNote = head;
+        Node<Task> curNote = getHead();//head;
         while (curNote != null){
             historyTaskData.add(curNote.data);
             curNote = curNote.next;
@@ -49,6 +72,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public  List<Task> getHistory(){
         ArrayList<Task> historyArray = getTasks();
+
         for (Task taskIdPtint: historyArray){
             System.out.println("+ ID: " + taskIdPtint.getIdTask()+ " taskName: " +  taskIdPtint.getTaskName() + " taskDescription: " + taskIdPtint.getTaskDescription() );
         }
@@ -71,16 +95,16 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode.data = null;
             Node<Task> removeNodePrev = historyMap.get(prevNodeID);
             removeNodePrev.next = null;
-            tail = removeNodePrev;
-            size--;
+            setTail(removeNodePrev);//tail = removeNodePrev;
+            setSize(getSize()-1);;
         } else if (removeNode.prev == null) {
             int nextNodeID = removeNode.next.data.getIdTask();
             removeNode.next = null;
             removeNode.data = null;
             Node<Task> removeNodeNext = historyMap.get(nextNodeID);
             removeNodeNext.prev = null;
-            head = removeNodeNext;
-            size--;
+            setHead(removeNodeNext);//head = removeNodeNext;
+            setSize(getSize()-1);;
         } else {
             int prevNodeID = removeNode.prev.data.getIdTask();
             int nextNodeID = removeNode.next.data.getIdTask();
@@ -91,7 +115,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             Node<Task> removeNodeNext = historyMap.get(nextNodeID);
             removeNodePrev.next = removeNodeNext;
             removeNodeNext.prev = removeNodePrev;
-            size--;
+            setSize(getSize()-1);
         }
     }
 }

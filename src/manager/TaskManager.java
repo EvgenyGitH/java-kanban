@@ -1,6 +1,15 @@
 package manager;
 
+import task.Epic;
+import task.Subtask;
+import task.Task;
+
 public interface TaskManager {
+
+    public void saveTask (Task task);
+    public void saveEpic (Epic epic);
+    public void saveSubtask (Subtask subtask);
+
 
     //Получение списка всех задач.
     void printAllTask();
@@ -25,6 +34,15 @@ public interface TaskManager {
     //Управление статусами осуществляется по следующему правилу
     void statusUpdate();
 
+
+    //отметка о просмотре
+    public void getTask(Task task);
+    public void getEpic(Task task);
+    public void getSubtask(Task task);
+
+
+    //получение Истории
+    public void getArrayHistory();
 
 }
 

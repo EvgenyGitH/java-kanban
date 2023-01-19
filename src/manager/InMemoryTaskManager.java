@@ -11,13 +11,13 @@ import java.util.HashMap;
 public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
 
-    HistoryManager historyManager = Managers.getDefaultHistory();
 
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
-   InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+    //  HistoryManager historyManager = Managers.getDefaultHistory();
+    HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
 
     //создание ID
@@ -27,18 +27,21 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     //Добавление Задач, Эпиков, Субзадач
+    @Override
     public void saveTask (Task task){
         task.setTaskStatus(StatusTask.NEW);
         int taskId = creatId();
         task.setIdTask(taskId);
         tasks.put(taskId, task);
     }
+    @Override
     public void saveEpic (Epic epic){
         epic.setTaskStatus(StatusTask.NEW);
         int epicId = creatId();
         epic.setIdTask(epicId);
         epics.put(epicId, epic);
     }
+    @Override
     public void saveSubtask (Subtask subtask) {
         subtask.setTaskStatus(StatusTask.NEW);
         int subTaskId = creatId();
@@ -313,14 +316,24 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     //отметка о просмотре
+    @Override
     public void getTask(Task task){
         inMemoryHistoryManager.add(task);
     }
+    @Override
     public void getEpic(Task task) {
         inMemoryHistoryManager.add(task);
     }
+    @Override
     public void getSubtask(Task task){
         inMemoryHistoryManager.add(task);
+    }
+
+
+    //получение истории
+    @Override
+    public void getArrayHistory(){
+        inMemoryHistoryManager.getHistory();
     }
 
 
