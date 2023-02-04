@@ -4,11 +4,15 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public interface TaskManager {
 
-    public void saveTask (Task task);
-    public void saveEpic (Epic epic);
-    public void saveSubtask (Subtask subtask);
+    public void saveTask (Task task) throws IOException;
+    public void saveEpic (Epic epic) throws IOException;
+    public void saveSubtask (Subtask subtask) throws IOException;
 
 
     //Получение списка всех задач.
@@ -43,6 +47,7 @@ public interface TaskManager {
 
     //получение Истории
     public void getArrayHistory();
+
 
 }
 

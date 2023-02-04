@@ -59,6 +59,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
 
+    @Override
     public ArrayList<Task> getTasks(){
         ArrayList<Task> historyTaskData = new ArrayList<>();
         Node<Task> curNote = getHead();//head;
@@ -73,8 +74,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     public  List<Task> getHistory(){
         ArrayList<Task> historyArray = getTasks();
 
-        for (Task taskIdPtint: historyArray){
-            System.out.println("+ ID: " + taskIdPtint.getIdTask()+ " taskName: " +  taskIdPtint.getTaskName() + " taskDescription: " + taskIdPtint.getTaskDescription() );
+        for (Task taskIdPrint: historyArray){
+            System.out.println("+ ID: " + taskIdPrint.getIdTask()+ " taskName: " +  taskIdPrint.getTaskName() +
+                    " taskDescription: " + taskIdPrint.getTaskDescription() );
         }
         return historyArray;
     }
@@ -89,22 +91,29 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (removeNode == null) {
             return;
         }
-        if (removeNode.next == null) {
+        if (removeNode.prev!= null && removeNode.next == null) {
             int prevNodeID = removeNode.prev.data.getIdTask();
             removeNode.prev = null;
             removeNode.data = null;
             Node<Task> removeNodePrev = historyMap.get(prevNodeID);
             removeNodePrev.next = null;
             setTail(removeNodePrev);//tail = removeNodePrev;
-            setSize(getSize()-1);;
-        } else if (removeNode.prev == null) {
+            setSize(getSize()-1);
+        } else if (removeNode.prev == null && removeNode.next != null) {
             int nextNodeID = removeNode.next.data.getIdTask();
             removeNode.next = null;
             removeNode.data = null;
             Node<Task> removeNodeNext = historyMap.get(nextNodeID);
             removeNodeNext.prev = null;
             setHead(removeNodeNext);//head = removeNodeNext;
-            setSize(getSize()-1);;
+            setSize(getSize() - 1);
+        } else if (removeNode.prev == null && removeNode.next == null){
+            removeNode.prev = null;
+            removeNode.data = null;
+            removeNode.next = null;
+            setTail(null);
+            setHead(null);
+            setSize(getSize()-1);
         } else {
             int prevNodeID = removeNode.prev.data.getIdTask();
             int nextNodeID = removeNode.next.data.getIdTask();

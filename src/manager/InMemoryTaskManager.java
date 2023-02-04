@@ -5,19 +5,35 @@ import task.StatusTask;
 import task.Subtask;
 import task.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
 
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epics = new HashMap<>();
+    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+/*    public HashMap<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public HashMap<Integer, Epic> getEpics() {
+        return epics;
+    }
+
+    public HashMap<Integer, Subtask> getSubtasks() {
+        return subtasks;
+    }*/
 
     //  HistoryManager historyManager = Managers.getDefaultHistory();
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+
+
+
 
 
     //создание ID
@@ -28,21 +44,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Добавление Задач, Эпиков, Субзадач
     @Override
-    public void saveTask (Task task){
+    public void saveTask (Task task) throws IOException {
         task.setTaskStatus(StatusTask.NEW);
         int taskId = creatId();
         task.setIdTask(taskId);
         tasks.put(taskId, task);
     }
     @Override
-    public void saveEpic (Epic epic){
+    public void saveEpic (Epic epic) throws IOException {
         epic.setTaskStatus(StatusTask.NEW);
         int epicId = creatId();
         epic.setIdTask(epicId);
         epics.put(epicId, epic);
     }
     @Override
-    public void saveSubtask (Subtask subtask) {
+    public void saveSubtask (Subtask subtask) throws IOException {
         subtask.setTaskStatus(StatusTask.NEW);
         int subTaskId = creatId();
         subtask.setIdTask(subTaskId);

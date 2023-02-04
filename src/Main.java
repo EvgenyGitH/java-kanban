@@ -1,5 +1,15 @@
-package manager;
+/*
 
+Main.java  -  ПОКА НЕ УДАЛИЛ (НА ВСЯКИЙ СЛУЧАЙ)
+Рабочий    main   в FileBackedTasksManager
+
+*/
+
+/*
+
+import manager.FileBackedTasksManager;
+import manager.Managers;
+import manager.TaskManager;
 import task.Epic;
 import task.StatusTask;
 import task.Subtask;
@@ -13,41 +23,47 @@ public class Main {
 
     public static void main(String[] args) {
 
+
+
       //  TaskManager taskManager = Managers.getDefault();
       //  HistoryManager historyManager = Managers.getDefaultHistory(); - реализован в InMemoryTaskManager (стр 21)
 
-        TaskManager inMemoryTaskManager = Managers.getDefault();
+       // -- TaskManager inMemoryTaskManager = Managers.getDefault();
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+
 
       //InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
       //InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
         Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
-        inMemoryTaskManager.saveTask (task1);
+        fileBackedTasksManager.saveTask (task1);
         Task task2 = new Task("Заказать пиццу ", "Позвонить в ресторан", StatusTask.NEW);
-        inMemoryTaskManager.saveTask (task2);
+        fileBackedTasksManager.saveTask (task2);
+
+
 
 
         Epic epic1 = new Epic ("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом",StatusTask.NEW);
         Subtask subtask1 = new Subtask( "Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 3 );
         Subtask subtask2 = new Subtask( "Приготовить лед", "Воду налить в форму и поставить в морозилку", StatusTask.NEW, 3 );
         Subtask subtask3 = new Subtask( "Купить Колу", "Купить 2 литра", StatusTask.NEW, 3 );
-        inMemoryTaskManager.saveEpic(epic1);
-        inMemoryTaskManager.saveSubtask(subtask1);
-        inMemoryTaskManager.saveSubtask(subtask2);
-        inMemoryTaskManager.saveSubtask(subtask3);
+        fileBackedTasksManager.saveEpic(epic1);
+        fileBackedTasksManager.saveSubtask(subtask1);
+        fileBackedTasksManager.saveSubtask(subtask2);
+        fileBackedTasksManager.saveSubtask(subtask3);
 
 
 
         Epic epic2 = new Epic ("Приготовить мороженое", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
       //  Subtask subtask3 = new Subtask( "Купить Сливки/Молоко", "Купить 1 литр/2 литра", StatusTask.NEW, 5);
-        inMemoryTaskManager.saveEpic(epic2);
+        fileBackedTasksManager.saveEpic(epic2);
     //    inMemoryTaskManager.saveSubtask(subtask3);
 
 
 
         //печать всех задач
         System.out.println("---printAllTask---");
-        inMemoryTaskManager.printAllTask();
+        fileBackedTasksManager.printAllTask();
 
 
         //удаление всех задач
@@ -58,42 +74,42 @@ public class Main {
         System.out.println("---ТЗ-5 -добавление запросов----");
         System.out.println("--------------------------------");
 
-        inMemoryTaskManager.getTaskById(2);
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getTaskById(2);
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(1); // 1 - 2, 2 - 3, 3 - 1 , 4 - 2, 5 - 1 , 6 - 3
+        fileBackedTasksManager.getTaskById(1); // 1 - 2, 2 - 3, 3 - 1 , 4 - 2, 5 - 1 , 6 - 3
       //  inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(3);
+        fileBackedTasksManager.getTaskById(3);
       // inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(2);
+        fileBackedTasksManager.getTaskById(2);
         //inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(6);
+        fileBackedTasksManager.getTaskById(6);
         //inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(5);
+        fileBackedTasksManager.getTaskById(5);
         //inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(2);
+        fileBackedTasksManager.getTaskById(2);
        // inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
-        inMemoryTaskManager.getTaskById(6);
+        fileBackedTasksManager.getTaskById(6);
       //  inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
 
         System.out.println("---ТЗ-5-удаление--");
-        inMemoryTaskManager.removeTaskById (3);
+        fileBackedTasksManager.removeTaskById (3);
      //   inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
         System.out.println("-------");
      //   inMemoryTaskManager.getTaskById(5);
        // inMemoryTaskManager.getTaskById(6);
@@ -102,7 +118,7 @@ public class Main {
 
         System.out.println("---ТЗ-5-Итог--");
      //   inMemoryHistoryManager.getHistory();
-        inMemoryTaskManager.getArrayHistory();
+        fileBackedTasksManager.getArrayHistory();
 
 
         System.out.println("---ТЗ-5---");
@@ -160,7 +176,15 @@ public class Main {
         inMemoryTaskManager.statusUpdate();
         inMemoryTaskManager.printAllTask();
 */
+/*
+
+
+
 
     }
 }
+
+
+
+*/
 
