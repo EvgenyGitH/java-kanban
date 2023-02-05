@@ -4,15 +4,13 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public interface TaskManager {
 
-    public void saveTask (Task task) throws IOException;
-    public void saveEpic (Epic epic) throws IOException;
-    public void saveSubtask (Subtask subtask) throws IOException;
+    void saveTask(Task task);
+
+    void saveEpic(Epic epic);
+
+    void saveSubtask(Subtask subtask);
 
 
     //Получение списка всех задач.
@@ -22,31 +20,33 @@ public interface TaskManager {
     void removeAllTask();
 
     //Получение по идентификатору.
-    void getTaskById (Integer iDnumber);
+    void getTaskById(Integer iDnumber);
     //Создание. Сам объект должен передаваться в качестве параметра.
 
 
     //Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
-    void updateById (int idUpdate, Object updateDataById);
+    void updateById(int idUpdate, Task updateDataById);
 
     //Удаление по идентификатору.
-    void removeTaskById (Integer iDnumber);
+    void removeTaskById(Integer iDnumber);
 
     //Получение списка всех подзадач определённого эпика.
-    void printEpicSubtask(int epicIdNumber );
+    void printEpicSubtask(int epicIdNumber);
 
     //Управление статусами осуществляется по следующему правилу
     void statusUpdate();
 
 
     //отметка о просмотре
-    public void getTask(Task task);
-    public void getEpic(Task task);
-    public void getSubtask(Task task);
+    void getTask(Task task);
+
+    void getEpic(Task task);
+
+    void getSubtask(Task task);
 
 
     //получение Истории
-    public void getArrayHistory();
+    void getArrayHistory();
 
 
 }

@@ -3,7 +3,7 @@ package task;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    protected ArrayList <Integer> subTaskGroup = new ArrayList<>();
+    protected ArrayList<Integer> subTaskGroup = new ArrayList<>();
 
     public Epic(String taskName, String taskDescription, StatusTask taskStatus) {
         super(taskName, taskDescription, taskStatus);
@@ -13,7 +13,6 @@ public class Epic extends Task {
     public ArrayList<Integer> getSubTaskGroup() {
         return subTaskGroup;
     }
-
 
 
 }
