@@ -147,33 +147,27 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileWriter.write(historyToString(inMemoryHistoryManager));
             }
 
-        } catch (
-                ManagerSaveException e) {                        // Просьба проверить все ли корректно у меня с исключениями ? или должно быть как-то по другому ?
-            throw new ManagerSaveException("Ошибка записи");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        } catch (IOException exp) {
+            throw new ManagerSaveException("Ошибка записи");  // Просьба проверить все ли корректно у меня с исключениями ? или должно быть как-то по другому ?
         }
 
     }
 
     //сохранения менеджера истории из CSV
-    static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         List<Task> historyArrayID = manager.getTasks();
-        //String listHistoryId = "";
         StringBuilder stringBuilder = new StringBuilder();
         for (Task taskIdPrint : historyArrayID) {
             stringBuilder.append(taskIdPrint.getIdTask() + ",");
-
-            // listHistoryId = listHistoryId + taskIdPrint.getIdTask() +  ",";
         }
-        String listHistoryId = stringBuilder.toString();
 
-        return listHistoryId;
+        return stringBuilder.toString();
     }
 
 
     //восстановления менеджера истории из CSV
-    static List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         List<Integer> idForHistory = new ArrayList<>();
         String[] split = value.split(",");
 
@@ -185,7 +179,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     //восстановление Task из String
-    public Task fromString(String value) {
+    private Task fromString(String value) {
         Task newTask = null;
         String[] split = value.split(",");  //id,type,name,description,status,epic
 
@@ -218,7 +212,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     //восстановление данных из файла
-    static FileBackedTasksManager loadFromFile(File file) throws IOException {
+    private static FileBackedTasksManager loadFromFile(File file) throws IOException {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -256,19 +250,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     //сохранение Таска toString
-    String toString(Task task) {
+    private String toString(Task task) {
         return task.getIdTask() + "," + TypeTask.TASK + "," + task.getTaskName() + "," +
                 task.getTaskDescription() + "," + task.getTaskStatus() + ",\n";
     }
 
     //сохранение Таска toString
-    String toString(Epic task) {
+    private String toString(Epic task) {
         return task.getIdTask() + "," + TypeTask.EPIC + "," + task.getTaskName() + "," +
                 task.getTaskDescription() + "," + task.getTaskStatus() + ",\n";
     }
 
     //сохранение СабТаска toString
-    String toString(Subtask task) {
+    private String toString(Subtask task) {
         return task.getIdTask() + "," + TypeTask.SUBTASK + "," + task.getTaskName() + "," +
                 task.getTaskDescription() + "," + task.getTaskStatus() + "," + task.getEpicGroup() + "\n";
     }
