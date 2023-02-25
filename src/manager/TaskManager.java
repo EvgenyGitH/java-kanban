@@ -4,14 +4,23 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Set;
+
 public interface TaskManager {
 
+    HashMap<Integer, Task> getTasks();
+    HashMap<Integer, Epic> getEpics();
+    HashMap<Integer, Subtask> getSubtasks();
     void saveTask(Task task);
+
 
     void saveEpic(Epic epic);
 
     void saveSubtask(Subtask subtask);
 
+    Set getPrioritizedTasks();
 
     //Получение списка всех задач.
     void printAllTask();

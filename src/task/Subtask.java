@@ -1,5 +1,8 @@
 package task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private int epicGroup;
 
@@ -7,6 +10,13 @@ public class Subtask extends Task {
         super(taskName, taskDescription, taskStatus);
         this.epicGroup = epicGroup;
     }
+
+    public Subtask(String startTime, String duration, String taskName, String taskDescription, StatusTask taskStatus, int epicGroup) {
+        super(startTime, duration, taskName, taskDescription, taskStatus);
+        this.epicGroup = epicGroup;
+    }
+
+
 
     public int getEpicGroup() {
         return epicGroup;
