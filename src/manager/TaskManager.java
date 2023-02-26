@@ -10,9 +10,9 @@ import java.util.Set;
 
 public interface TaskManager {
 
-    HashMap<Integer, Task> getTasks();
-    HashMap<Integer, Epic> getEpics();
-    HashMap<Integer, Subtask> getSubtasks();
+    HashMap<Integer, Task> getTasksHashMap();
+    HashMap<Integer, Epic> getEpicsHashMap();
+    HashMap<Integer, Subtask> getSubtasksHashMap();
     void saveTask(Task task);
 
 

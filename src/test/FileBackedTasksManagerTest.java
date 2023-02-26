@@ -1,19 +1,19 @@
 package test;
 
 import manager.FileBackedTasksManager;
-import manager.InMemoryTaskManager;
-import manager.TaskManager;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.StatusTask;
 import task.Subtask;
 import task.Task;
 
-import java.io.*;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import static manager.FileBackedTasksManager.loadFromFile;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
@@ -26,15 +26,15 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     @Test
     public void testSave() throws IOException {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
-        Task task1 = new Task( "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
-        Task task2 = new Task( "19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
 
-        Epic epic1 = new Epic( "Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
-        Subtask subtask1 = new Subtask("19.02.2023 12:15","14","Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 3);
-        Subtask subtask2 = new Subtask("19.02.2023 12:30","14","Приготовить лед", "Воду налить в форму и поставить в морозилку", StatusTask.NEW, 3);
-        Subtask subtask3 = new Subtask("19.02.2023 12:45","14","Купить Колу", "Купить 2 литра", StatusTask.NEW, 3);
+        Epic epic1 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        Subtask subtask1 = new Subtask("19.02.2023 12:15", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 3);
+        Subtask subtask2 = new Subtask("19.02.2023 12:30", "14", "Приготовить лед", "Воду налить в форму и поставить в морозилку", StatusTask.NEW, 3);
+        Subtask subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Колу", "Купить 2 литра", StatusTask.NEW, 3);
         fileBackedTasksManager.saveEpic(epic1);
         fileBackedTasksManager.saveSubtask(subtask1);
         fileBackedTasksManager.saveSubtask(subtask2);
@@ -45,25 +45,23 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
         FileReader reader = new FileReader("src/resources/backup.csv");
         BufferedReader br = new BufferedReader(reader);
-            String line = br.readLine();
-            System.out.println(line);
+        String line = br.readLine();
+        System.out.println(line);
         br.close();
 
-        assertEquals("id,type,name,description,status,epic, startTime, duration ", line );
+        assertEquals("id,type,name,description,status,epic, startTime, duration ", line);
     }
 
-   @Test
+    @Test
     public void testLoadFromFile() throws IOException {
-       File file = new File("src/resources/backup.csv");
-       FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        File file = new File("src/resources/backup.csv");
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
-       Task task2 = new Task( "19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
-       fileBackedTasksManager.saveTask(task2);
+        Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        fileBackedTasksManager.saveTask(task2);
 
-       FileBackedTasksManager newFileBackedTasksManager = new FileBackedTasksManager(file);
-       newFileBackedTasksManager.loadFromFile(file);
-
-        assertEquals(fileBackedTasksManager.getTasks().size(), newFileBackedTasksManager.getTasks().size(), "Не загрузились строки" );
+        FileBackedTasksManager newFileBackedTasksManager = loadFromFile(file);
+        assertEquals(fileBackedTasksManager.getTasksHashMap().size(), newFileBackedTasksManager.getTasksHashMap().size(), "Не загрузились строки");
 
     }
 

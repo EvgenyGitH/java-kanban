@@ -19,15 +19,15 @@ public class InMemoryTaskManager implements TaskManager {
      protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
     @Override
-    public HashMap<Integer, Task> getTasks() {
+    public HashMap<Integer, Task> getTasksHashMap() {
         return tasks;
     }
 
-    public HashMap<Integer, Epic> getEpics() {
+    public HashMap<Integer, Epic> getEpicsHashMap() {
         return epics;
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() {
+    public HashMap<Integer, Subtask> getSubtasksHashMap() {
         return subtasks;
     }
 

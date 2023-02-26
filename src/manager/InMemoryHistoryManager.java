@@ -12,7 +12,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> head;
     private Node<Task> tail;
     private int size = 0;
+
+
     private Map<Integer, Node<Task>> historyMap = new HashMap<>();
+    public Map<Integer, Node<Task>> getHistoryMap() {
+        return historyMap;
+    }
 
     public Node<Task> getHead() {
         return head;

@@ -31,12 +31,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
 // ПРОВЕРКА: восстановления из файла тасков, эпиков, сабтасков, истории (снять // , закомментить Запись в файл /*...*/  )
-     loadFromFile(file);
+  //   loadFromFile(file);
 // ПРОВЕРКА: восстановления из файла тасков, эпиков, сабтасков, истории (снять // , закомментить Запись в файл /*...*/  )
 
 
 // ПРОВЕРКА: запись в файл тасков, эпиков, сабтасков (снять /*  ...  */ , закомментить Восстановление из файл // )
-/*
+
         Task task1 = new Task( "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task( "19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
@@ -129,7 +129,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println("---ТЗ-6-Итог--");
         fileBackedTasksManager.getArrayHistory();
         System.out.println("---ТЗ-6---");
-*/
+
 // ПРОВЕРКА: запись в файл тасков, эпиков, сабтасков (снять /*  ...  */ , закомментить Восстановление из файл // )
 
 
