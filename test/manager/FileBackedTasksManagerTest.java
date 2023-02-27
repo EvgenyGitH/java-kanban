@@ -1,31 +1,33 @@
-package test;
+package manager;
 
-import manager.FileBackedTasksManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.StatusTask;
 import task.Subtask;
 import task.Task;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
+import org.junit.jupiter.api.function.Executable;
 import static manager.FileBackedTasksManager.loadFromFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
+
+    protected File file = new File("src/resources/backup.csv");
 
     @Override
     public void setTaskManager() {
         taskManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
     }
 
+
     @Test
     public void testSave() throws IOException {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
@@ -39,30 +41,46 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         fileBackedTasksManager.saveSubtask(subtask1);
         fileBackedTasksManager.saveSubtask(subtask2);
         fileBackedTasksManager.saveSubtask(subtask3);
-
         Epic epic2 = new Epic("Приготовить мороженое", "Купить ингредиенты", StatusTask.NEW);
         fileBackedTasksManager.saveEpic(epic2);
 
-        FileReader reader = new FileReader("src/resources/backup.csv");
-        BufferedReader br = new BufferedReader(reader);
-        String line = br.readLine();
-        System.out.println(line);
-        br.close();
+        String line = "";
+        try (FileReader reader = new FileReader("src/resources/backup.csv"); BufferedReader br = new BufferedReader(reader)){
+            line = br.readLine();
+        }catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
 
         assertEquals("id,type,name,description,status,epic, startTime, duration ", line);
     }
 
     @Test
+    public void testSaveException() {
+        File wrongFile = new File("src/resourcesWRONG/backup.csv");
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(wrongFile);
+        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+
+        final ManagerSaveException exp = assertThrows(
+                ManagerSaveException.class,
+                () -> fileBackedTasksManager.saveTask(task1)
+        );
+
+        assertEquals("Ошибка записи", exp.getMessage());
+    }
+
+
+
+
+    @Test
     public void testLoadFromFile() throws IOException {
-        File file = new File("src/resources/backup.csv");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
 
         FileBackedTasksManager newFileBackedTasksManager = loadFromFile(file);
-        assertEquals(fileBackedTasksManager.getTasksHashMap().size(), newFileBackedTasksManager.getTasksHashMap().size(), "Не загрузились строки");
 
+        assertEquals(fileBackedTasksManager.getTasksHashMap().size(), newFileBackedTasksManager.getTasksHashMap().size(), "Не загрузились строки");
     }
 
 }

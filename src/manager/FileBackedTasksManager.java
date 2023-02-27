@@ -31,7 +31,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
 // ПРОВЕРКА: восстановления из файла тасков, эпиков, сабтасков, истории (снять // , закомментить Запись в файл /*...*/  )
-  //   loadFromFile(file);
+   //  loadFromFile(file);
 // ПРОВЕРКА: восстановления из файла тасков, эпиков, сабтасков, истории (снять // , закомментить Запись в файл /*...*/  )
 
 
@@ -138,7 +138,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     //сохранение в файл
     private void save() {
-        try (Writer fileWriter = new FileWriter("src/resources/backup.csv")) {
+        try (Writer fileWriter = new FileWriter(file)) {
             fileWriter.write("id,type,name,description,status,epic, startTime, duration \n");
 
             for (Integer id : tasks.keySet()) {
@@ -163,9 +163,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
 
 
-        } catch (IOException exp) {
+        } catch (FileNotFoundException exp) { // FileNotFoundException /IOException
             throw new ManagerSaveException("Ошибка записи");  // Просьба проверить все ли корректно у меня с исключениями ? или должно быть как-то по другому ?
+        } catch (IOException exp){
+            throw new ManagerSaveException("Ошибка записи");
         }
+
 
     }
 

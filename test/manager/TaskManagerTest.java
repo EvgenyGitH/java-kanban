@@ -1,4 +1,4 @@
-package test;
+package manager;
 
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +13,10 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 abstract class TaskManagerTest<T extends TaskManager> {
-    public T taskManager;
-    public Task task;
-    public Epic epic2;
-    public Subtask subtask3;
+    protected T taskManager;
+    protected Task task;
+    protected Epic epic2;
+    protected Subtask subtask3;
 
     public void setTaskManager() {
     }
@@ -37,14 +37,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void testSaveTask() {
         taskManager.saveTask(task);
+
         assertEquals(1, taskManager.getTasksHashMap().size(), "Размер HashMap не соответствует количеству Заданий!");
     }
 
 
     @Test
     public void testSaveEpic() {
-
         taskManager.saveEpic(epic2);
+
         assertEquals(1, taskManager.getEpicsHashMap().size());
     }
 
@@ -52,9 +53,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void testSaveSubtask() {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
-        taskManager.saveSubtask(subtask3);
-        assertEquals(1, taskManager.getSubtasksHashMap().size());
 
+        taskManager.saveSubtask(subtask3);
+
+        assertEquals(1, taskManager.getSubtasksHashMap().size());
     }
 
     @Test
@@ -67,9 +69,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
 
-        System.out.println("Задачи: ");
-
         for (Integer taskId : taskManager.getTasksHashMap().keySet()) {
+            System.out.println("Задачи: ");
             Task taskData = taskManager.getTasksHashMap().get(taskId);
             System.out.println("ID: " + taskId + " taskName: " + taskData.getTaskName() + ", taskDescription: " +
                     taskData.getTaskDescription() + ", taskStatus: " + taskData.getTaskStatus());
@@ -103,7 +104,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testRemoveAllTask() {
-
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
@@ -153,8 +153,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 taskManager.getSubtask(data);
 
                 assertEquals("Купить Ром/Колу", data.getTaskName(), "Не соответствует ID Задания!");
-
-
             }
         }
 
@@ -188,7 +186,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 taskManager.getSubtask(data);
 
                 assertEquals("Купить Ром/Колу", data.getTaskName(), "Не соответствует ID Задания!");
-
             }
         }
     }
@@ -196,7 +193,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testUpdateById() {
-
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
