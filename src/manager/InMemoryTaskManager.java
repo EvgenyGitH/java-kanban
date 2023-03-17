@@ -77,6 +77,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
         } else {
+
             tasks.put(taskId, task);
             timeTree.add(task);
         }
@@ -123,6 +124,14 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("Время занято");
             }
         } else {
+            for (Integer epic : epics.keySet()) {                           //----
+                if (epic.equals(subtask.getEpicGroup())) {
+                    System.out.println(epics.get(epic).subTaskGroup.size()); // для проверки списка subTaskGroup
+                    epics.get(epic).subTaskGroup.add(subTaskId);
+                   // epics.get(epic).getSubTaskGroup().add(subTaskId);
+
+                }
+            }
             subtasks.put(subTaskId, subtask);
             timeTree.add(subtask);
         }
@@ -302,13 +311,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Получение по идентификатору.
     @Override
-    public void getTaskById(Integer iDnumber) {
+    public Task getTaskById(Integer iDnumber) {
+        Task taskById = null;
         for (Integer id : tasks.keySet()) {
             if (id.equals(iDnumber)) {
                 Task data = tasks.get(id);
                 System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
                         data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 getTask(data);
+                taskById = data;
             }
         }
         for (Integer id : epics.keySet()) {
@@ -317,6 +328,7 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
                         data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus());
                 getEpic(data);
+                taskById = data;
             }
         }
         for (Integer id : subtasks.keySet()) {
@@ -325,8 +337,10 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("ID: " + id + " taskName: " + data.getTaskName() + ", taskDescription: " +
                         data.getTaskDescription() + ", taskStatus: " + data.getTaskStatus() + " epicGroup: " + data.getEpicGroup());
                 getSubtask(data);
+                taskById = data;
             }
         }
+        return taskById;
     }
 
 
@@ -544,8 +558,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     //получение истории
     @Override
-    public void getArrayHistory() {
-        inMemoryHistoryManager.getHistory();
+    public List<Task> getArrayHistory() {
+        return inMemoryHistoryManager.getHistory();
     }
 
 

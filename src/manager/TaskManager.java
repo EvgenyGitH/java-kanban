@@ -6,6 +6,7 @@ import task.Task;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public interface TaskManager {
@@ -29,7 +30,7 @@ public interface TaskManager {
     void removeAllTask();
 
     //Получение по идентификатору.
-    void getTaskById(Integer iDnumber);
+    Task getTaskById(Integer iDnumber);
     //Создание. Сам объект должен передаваться в качестве параметра.
 
 
@@ -55,7 +56,7 @@ public interface TaskManager {
 
 
     //получение Истории
-    void getArrayHistory();
+    List<Task> getArrayHistory();
 
 
 }
