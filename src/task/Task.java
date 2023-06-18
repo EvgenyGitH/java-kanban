@@ -16,12 +16,13 @@ public class Task {
     protected String taskDescription;
     protected StatusTask taskStatus; // NEW - IN_PROGRESS - DONE
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String taskName, String taskDescription, StatusTask taskStatus) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStatus = taskStatus;
+
     }
 
     public Task(String startTime,String duration, String taskName, String taskDescription, StatusTask taskStatus) {
@@ -30,6 +31,16 @@ public class Task {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStatus = taskStatus;
+        endTime = checkEndTime(getStartTime(), getDuration());//startTime.plus(duration);
+
+    }
+
+    public LocalDateTime checkEndTime (LocalDateTime startTime, Duration duration){
+        if (duration != null){
+            return startTime.plus(duration);
+        } else {
+            return null;
+        }
     }
 
 
@@ -57,6 +68,9 @@ public class Task {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+
+
+
 
     public int getIdTask() {
         return idTask;

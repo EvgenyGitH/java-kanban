@@ -47,8 +47,8 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks", this::TaskHandler);
         taskManager = Managers.getDefault();
         gson = new GsonBuilder()
-                .setPrettyPrinting()
-                //.serializeNulls()
+             //   .setPrettyPrinting()
+              //  .serializeNulls()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
 
@@ -59,7 +59,6 @@ public class HttpTaskServer {
 
     public void TaskHandler (HttpExchange exchange) {
         try {
-         //   String path = exchange.getRequestURI().getPath();
             String requestMethod = exchange.getRequestMethod();
 
             switch (requestMethod){
@@ -71,10 +70,10 @@ public class HttpTaskServer {
                     handlePOST(exchange);
                     break;
                 }
-    /*            case "DELETE":{
-                //    handleDELETE(exchange);
+                case "DELETE":{
+                    handleDELETE(exchange);
                     break;
-                }*/
+                }
                 default: {
                     System.out.println("/tasks/ ждёт GET, POST или DELETE запрос а получил: "
                             + exchange.getRequestMethod());
@@ -92,9 +91,10 @@ public class HttpTaskServer {
     public void handleGET (HttpExchange exchange) {
         try {
             String path = exchange.getRequestURI().getPath();
+            String query = exchange.getRequestURI().getQuery();
 
             if (Pattern.matches("^/tasks$", path)) {
-                String response = gson.toJson(taskManager.getPrioritizedTasks());
+                String response = gson.toJson(taskManager.printAllTask());
                 sendText(exchange, response);
                 return;
             }
@@ -103,59 +103,72 @@ public class HttpTaskServer {
             String typeTask = pathSplit[2];
             switch (typeTask) {
                 case "task": {
-                    if (Pattern.matches("^/tasks/task/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/task/", "");
+                    if (Pattern.matches("^id=\\d+$", query)) {
+                        String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (id != -1) {
+                        if (id != -1 && taskManager.getTaskById(id)!=null) {
                             String response = gson.toJson(taskManager.getTaskById(id));
                             sendText(exchange, response);
                             System.out.println("Запрос успешно выполнен.");
                             break;
+                        }else {
+                            System.out.println("Задачи по указанному id не существует");
+                            exchange.sendResponseHeaders(404, 0);
+                            break;
                         }
+
                     }
 
                 }
                 case "epic": {
-                    if (Pattern.matches("^/tasks/epic/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/epic/", "");
+                    if (Pattern.matches("^id=\\d+$", query)) {
+                        String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (id != -1) {
+                        if (id != -1 && taskManager.getTaskById(id)!=null) {
                             String response = gson.toJson(taskManager.getTaskById(id));
                             sendText(exchange, response);
                             System.out.println("Запрос успешно выполнен.");
+                            break;
+                        }else {
+                            System.out.println("Задачи по указанному id не существует");
+                            exchange.sendResponseHeaders(404, 0);
                             break;
                         }
                     }
                 }
                 case "subtask": {
-                    if (Pattern.matches("^/tasks/subtask/\\d+$", path)) {
-                        String pathId = path.replaceFirst("/tasks/subtask/", "");
+                    if (Pattern.matches("^id=\\d+$", query)) {
+                        String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (id != -1) {
+                        if (id != -1 && taskManager.getTaskById(id)!=null) {
                             String response = gson.toJson(taskManager.getTaskById(id));
+                            sendText(exchange, response);
+                            System.out.println("Запрос успешно выполнен.");
+                            break;
+                        }else {
+                            System.out.println("Задачи по указанному id не существует");
+                            exchange.sendResponseHeaders(404, 0);
+                            break;
+                        }
+                    }
+                }
+                case "history": {
+                    if (Pattern.matches("^/tasks/history$", path)) {
+                        List<Task> history = taskManager.getArrayHistory();
+                        if (history.isEmpty()) {
+                            System.out.println("Истории просмотров пуста");
+                            String response = "Истории просмотров пуста";
+                            sendText(exchange, response);
+                            break;
+                        } else {
+                            String response = gson.toJson(taskManager.getArrayHistory());
                             sendText(exchange, response);
                             System.out.println("Запрос успешно выполнен.");
                             break;
                         }
                     }
                 }
-                case "history": {
-                    List<Task> history = taskManager.getArrayHistory();
-                    if (history.isEmpty()) {
-                        System.out.println("Истории просмотров пуста");
-                        exchange.sendResponseHeaders(204, 0);
-                    }
-
-                    String response = gson.toJson(taskManager.getArrayHistory());
-                    sendText(exchange, response);
-                    System.out.println("Запрос успешно выполнен.");
-                    break;
-                }
-
-
                 default: {
-                    /*System.out.println("/tasks/ ждёт GET, POST или DELETE запрос а получил: "
-                            + exchange.getRequestMethod());*/
                     exchange.sendResponseHeaders(405, 0);
                 }
             }
@@ -166,36 +179,49 @@ public class HttpTaskServer {
         }
     }
 
-
     public void handlePOST (HttpExchange exchange) {
         try {
             InputStream inputStream = exchange.getRequestBody();
+            String query = exchange.getRequestURI().getQuery();
+
             String body = new String(inputStream.readAllBytes(), DEFAULT_CHARSET);
 
-            String path = exchange.getRequestURI().getPath(); //toString();
+            String path = exchange.getRequestURI().getPath();
             String[] splitPath = path.split("/");
 
             switch (splitPath[2]) {
                 case "task":
+
                     System.out.println("\n/tasks/task/");
                     Task task = gson.fromJson(body, Task.class);
-                    if (task.getIdTask() > 0) {
-                        int idTask = task.getIdTask();
-                        taskManager.updateById(idTask, task);
-                        sendText(exchange, "Задача task - обновлена");
+
+                    if (query !=null){
+                        if (Pattern.matches("^id=\\d+$", query)) {
+                            String pathId = query.replaceFirst("id=", "");
+                            int id = parsePathId(pathId);
+                            if (id != -1 && id>0) {
+                                taskManager.updateById(id, task);
+                                sendText(exchange, String.valueOf(id)); //"Задача task - обновлена"
+                            }
+                    }
+
                     } else {
                         taskManager.saveTask(task);
-
-                        sendText(exchange, "task - добавлена");
+                        sendText(exchange, String.valueOf(task.getIdTask()) ); //"task - добавлена"
                     }
                     break;
                 case "epic":
                     System.out.println("\n/tasks/epic/");
                     Epic epic = gson.fromJson(body, Epic.class);
-                    if (epic.getIdTask() > 0) {
-                        int idTask = epic.getIdTask();
-                        taskManager.updateById(idTask, epic);
-                        sendText(exchange, "Задача epic - обновлена");
+                        if (query !=null){
+                            if (Pattern.matches("^id=\\d+$", query)) {
+                                String pathId = query.replaceFirst("id=", "");
+                                int id = parsePathId(pathId);
+                                if (id != -1 && id>0) {
+                                    taskManager.updateById(id, epic);
+                                    sendText(exchange, "Задача epic - обновлена");
+                                }
+                            }
                     } else {
                         taskManager.saveEpic(epic);
                         sendText(exchange, "epic - добавлена");
@@ -204,10 +230,19 @@ public class HttpTaskServer {
                 case "subtask":
                     System.out.println("\n/tasks/subtask/");
                     Subtask subtask = gson.fromJson(body, Subtask.class);
-                    if (subtask.getIdTask() > 0) {
-                        int idTask = subtask.getIdTask();
-                        taskManager.updateById(idTask, subtask);
-                        sendText(exchange, "Задача subtask - обновлена");
+
+                        if (query !=null){
+                            if (Pattern.matches("^id=\\d+$", query)) {
+                                String pathId = query.replaceFirst("id=", "");
+                                int id = parsePathId(pathId);
+                                if (id != -1 && id>0) {
+                                    taskManager.updateById(id, subtask);
+                                    sendText(exchange, "Задача subtask - обновлена");
+                                }
+                            }
+
+
+
                     } else {
                         taskManager.saveSubtask(subtask);
                         sendText(exchange, "subtask - добавлена");
@@ -222,7 +257,37 @@ public class HttpTaskServer {
         }
     }
 
+    public void handleDELETE (HttpExchange exchange) {
+        try {
+            String path = exchange.getRequestURI().getPath();
+            String query = exchange.getRequestURI().getQuery();
 
+            if (Pattern.matches("^/tasks/delete$", path)) {
+                taskManager.removeAllTask();
+                String response = "Все задачи удалены";
+                sendText(exchange, response);
+                return;
+            }
+            if (Pattern.matches("^id=\\d+$", query)) {
+                String pathId = query.replaceFirst("id=", "");
+                int id = parsePathId(pathId);
+                if (id != -1) {
+                    taskManager.removeTaskById(id);
+                    String response = "Задача с номером ID: " + id + " удалена";
+                    sendText(exchange, response);
+                    System.out.println("Запрос успешно выполнен.");
+
+                } else {
+                    String response = "Задача с номером ID: " + id + " отсутствует";
+                    sendText(exchange, response);
+                }
+            }
+        } catch (Exception exception){
+            exception.printStackTrace();
+        } finally {
+            exchange.close();
+        }
+    }
 
     private int parsePathId (String pathId){
         try{
@@ -232,33 +297,16 @@ public class HttpTaskServer {
         }
     }
 
-
     protected String readText(HttpExchange h) throws IOException {
         return new String(h.getRequestBody().readAllBytes(), UTF_8);
     }
 
-    protected void sendText(HttpExchange h, String text) throws IOException {
+    protected void sendText(HttpExchange h, String text ) throws IOException {
         byte[] resp = text.getBytes(UTF_8);
         h.getResponseHeaders().add("Content-Type", "application/json");
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
     }
-
-    private void writeResponse(HttpExchange exchange,
-                               String responseString,
-                               int responseCode) throws IOException {
-        if(responseString.isBlank()) {
-            exchange.sendResponseHeaders(responseCode, 0);
-        } else {
-            byte[] bytes = responseString.getBytes(DEFAULT_CHARSET);
-            exchange.sendResponseHeaders(responseCode, bytes.length);
-            try (OutputStream os = exchange.getResponseBody()) {
-                os.write(bytes);
-            }
-        }
-        exchange.close();
-    }
-
 
     public void start() {
         System.out.println("\nЗапускаем HttpTaskServer на порту " + PORT);
@@ -270,24 +318,14 @@ public class HttpTaskServer {
         httpServer.stop(0);
     }
 
-
-
-
-        public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         HttpTaskServer httpTaskServer = new HttpTaskServer();
         httpTaskServer.start();
-
-      //  httpTaskServer.stop();
+        httpTaskServer.stop();
     }
 
-
-
-
-
-    static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
+    public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         private final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
-
         @Override
         public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
             if (localDateTime == null){
@@ -303,7 +341,7 @@ public class HttpTaskServer {
         }
     }
 
-    static class DurationAdapter extends TypeAdapter<Duration> {
+    public class DurationAdapter extends TypeAdapter<Duration> {
         @Override
         public void write(JsonWriter jsonWriter, Duration duration) throws IOException {
             if (duration == null){

@@ -31,7 +31,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
 // ПРОВЕРКА: восстановления из файла тасков, эпиков, сабтасков, истории (снять // , закомментить Запись в файл /*...*/  )
-   //  loadFromFile(file);
+    // loadFromFile(file);
 // ПРОВЕРКА: восстановления из файла тасков, эпиков, сабтасков, истории (снять // , закомментить Запись в файл /*...*/  )
 
 
@@ -137,7 +137,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     //сохранение в файл
-    private void save() {
+    public void save() {
         try (Writer fileWriter = new FileWriter(file)) {
             fileWriter.write("id,type,name,description,status,epic, startTime, duration \n");
 
@@ -322,21 +322,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     @Override
-    public void saveTask(Task task) {
+    public int saveTask(Task task) {
         super.saveTask(task);
         save();
+        return task.getIdTask();
     }
 
     @Override
-    public void saveEpic(Epic epic) {
+    public int saveEpic(Epic epic) {
         super.saveEpic(epic);
         save();
+        return epic.getIdTask();
     }
 
     @Override
-    public void saveSubtask(Subtask subtask) {
+    public int saveSubtask(Subtask subtask) {
         super.saveSubtask(subtask);
         save();
+        return subtask.getIdTask();
     }
 
     @Override

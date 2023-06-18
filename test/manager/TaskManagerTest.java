@@ -8,34 +8,40 @@ import task.StatusTask;
 import task.Subtask;
 import task.Task;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 abstract class TaskManagerTest<T extends TaskManager> {
-    protected T taskManager;
+    public T taskManager;
     protected Task task;
     protected Epic epic2;
     protected Subtask subtask3;
 
-    public void setTaskManager() {
-    }
+  //  public void setTaskManager() {
+  //  }
 
-    @BeforeEach
-    public void setUp() {
-        setTaskManager();
-        HashMap<Integer, Task> tasks = taskManager.getTasksHashMap();
+
+
+  //  @BeforeEach
+ //   public void setUp() throws IOException {
+  //      setTaskManager();
+   /*     HashMap<Integer, Task> tasks = taskManager.getTasksHashMap();
         HashMap<Integer, Epic> epics = taskManager.getEpicsHashMap();
         HashMap<Integer, Subtask> subtasks = taskManager.getSubtasksHashMap();
+*/
+  //      task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+  //      epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+   //     subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
 
-        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
-        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
-        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
+  //  }
 
-    }
+
 
     @Test
     public void testSaveTask() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         taskManager.saveTask(task);
 
         assertEquals(1, taskManager.getTasksHashMap().size(), "Размер HashMap не соответствует количеству Заданий!");
@@ -44,6 +50,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testSaveEpic() {
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
         taskManager.saveEpic(epic2);
 
         assertEquals(1, taskManager.getEpicsHashMap().size());
@@ -51,9 +58,13 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testSaveSubtask() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("20.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 0);
+
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
-
+        subtask3.setEpicGroup(epic2.getIdTask());
         taskManager.saveSubtask(subtask3);
 
         assertEquals(1, taskManager.getSubtasksHashMap().size());
@@ -64,6 +75,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         int countPrintTask = 0;
         int countPrintEpic = 0;
         int countPrintSubtask = 0;
+
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
 
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
@@ -104,6 +119,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testRemoveAllTask() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
+
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
@@ -119,6 +138,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testGetTaskById() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
+
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
@@ -193,6 +216,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testUpdateById() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
+
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
@@ -224,6 +251,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testRemoveTaskById() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
 
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
@@ -236,6 +266,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testPrintEpicSubtask() {
+        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
+
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);

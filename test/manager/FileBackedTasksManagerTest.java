@@ -19,10 +19,17 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     protected File file = new File("src/resources/backup.csv");
 
-    @Override
-    public void setTaskManager() {
+    @BeforeEach
+    public void beforeEach() {
         taskManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
     }
+
+    /*@Override
+    public void setTaskManager() {
+        taskManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
+    }*/
+
+
 
 
     @Test

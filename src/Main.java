@@ -1,3 +1,71 @@
+/*--------------
+import server.KVTaskClient;
+
+import com.google.gson.Gson;
+import server.KVServer;
+import task.Epic;
+import task.StatusTask;
+import task.Subtask;
+import task.Task;
+
+import java.io.IOException;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+        new KVServer().start();
+        KVTaskClient n =new KVTaskClient("http://localhost:8090");
+
+        Gson gson = new Gson();
+       /* Task task1 = new Task( "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+       // String json = gson.toJson(task1);
+
+        n.put("1", gson.toJson(task1));
+
+        n.load("1");
+
+        System.out.println("-------------------");
+
+        Epic epic1 = new Epic( "Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+
+        n.put("2", gson.toJson(epic1));
+
+        n.load("2");*/
+
+/*-----------------------------
+        Task task1 = new Task( "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        n.put("1", gson.toJson(task1));
+
+        Task task2 = new Task( "19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        n.put("2", gson.toJson(task2));
+
+        Epic epic1 = new Epic( "Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
+        n.put("3", gson.toJson(epic1));
+
+        n.load("1");
+        n.load("2");
+        n.load("3");
+
+        Subtask subtask1 = new Subtask("19.02.2023 12:15","14","Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 3);
+        Subtask subtask2 = new Subtask("19.02.2023 12:30","14","Приготовить лед", "Воду налить в форму и поставить в морозилку", StatusTask.NEW, 3);
+       // Subtask subtask3 = new Subtask("19.02.2023 12:45","14","Купить Колу", "Купить 2 литра", StatusTask.NEW, 3);
+        n.put("4", gson.toJson(subtask1));
+        n.put("5", gson.toJson(subtask2));
+      //  n.put("6", gson.toJson(subtask3));
+
+
+        n.load("4");
+        n.load("5");
+
+        n.load("3");
+
+
+
+    }
+}
+
+
+
 /*
 
 Main.java  -  ПОКА НЕ УДАЛИЛ (НА ВСЯКИЙ СЛУЧАЙ)

@@ -5,6 +5,7 @@ import task.Subtask;
 import task.Task;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -14,17 +15,17 @@ public interface TaskManager {
     HashMap<Integer, Task> getTasksHashMap();
     HashMap<Integer, Epic> getEpicsHashMap();
     HashMap<Integer, Subtask> getSubtasksHashMap();
-    void saveTask(Task task);
+    int saveTask(Task task);
 
 
-    void saveEpic(Epic epic);
+    int saveEpic(Epic epic);
 
-    void saveSubtask(Subtask subtask);
+    int saveSubtask(Subtask subtask);
 
     Set getPrioritizedTasks();
 
     //Получение списка всех задач.
-    void printAllTask();
+    ArrayList<Task> printAllTask();
 
     //Удаление всех задач.
     void removeAllTask();
