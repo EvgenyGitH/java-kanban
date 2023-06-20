@@ -34,7 +34,6 @@ public interface TaskManager {
     Task getTaskById(Integer iDnumber);
     //Создание. Сам объект должен передаваться в качестве параметра.
 
-
     //Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     void updateById(int idUpdate, Task updateDataById);
 
@@ -47,7 +46,6 @@ public interface TaskManager {
     //Управление статусами осуществляется по следующему правилу
     void statusUpdate();
 
-
     //отметка о просмотре
     void getTask(Task task);
 
@@ -55,10 +53,8 @@ public interface TaskManager {
 
     void getSubtask(Task task);
 
-
     //получение Истории
     List<Task> getArrayHistory();
-
 
 }
 
@@ -66,8 +62,6 @@ public interface TaskManager {
 
 
 /*
-
-
 Менеджер
         Кроме классов для описания задач, вам нужно реализовать класс для объекта-менеджера. Он будет запускаться на старте программы и управлять всеми задачами. В нём должны быть реализованы следующие функции:
 

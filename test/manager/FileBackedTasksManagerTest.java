@@ -9,14 +9,11 @@ import task.Task;
 
 import java.io.*;
 
-import org.junit.jupiter.api.function.Executable;
 import static manager.FileBackedTasksManager.loadFromFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
-
     protected File file = new File("src/resources/backup.csv");
 
     @BeforeEach
@@ -29,15 +26,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
     }*/
 
-
-
-
     @Test
     public void testSave() throws IOException {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
-        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
-        Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        Task task2 = new Task("18.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
 
         Epic epic1 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
@@ -52,9 +46,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         fileBackedTasksManager.saveEpic(epic2);
 
         String line = "";
-        try (FileReader reader = new FileReader("src/resources/backup.csv"); BufferedReader br = new BufferedReader(reader)){
+        try (FileReader reader = new FileReader("src/resources/backup.csv"); BufferedReader br = new BufferedReader(reader)) {
             line = br.readLine();
-        }catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
@@ -74,8 +68,6 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
         assertEquals("Ошибка записи", exp.getMessage());
     }
-
-
 
 
     @Test

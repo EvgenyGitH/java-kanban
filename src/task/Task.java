@@ -5,12 +5,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Task {
-
     protected LocalDateTime startTime;
     protected Duration duration;
-
     protected LocalDateTime endTime;
-
     protected int idTask;
     protected String taskName;
     protected String taskDescription;
@@ -25,7 +22,7 @@ public class Task {
 
     }
 
-    public Task(String startTime,String duration, String taskName, String taskDescription, StatusTask taskStatus) {
+    public Task(String startTime, String duration, String taskName, String taskDescription, StatusTask taskStatus) {
         this.startTime = LocalDateTime.parse(startTime, formatter);
         this.duration = Duration.ofMinutes(Long.parseLong(duration));
         this.taskName = taskName;
@@ -35,15 +32,13 @@ public class Task {
 
     }
 
-    public LocalDateTime checkEndTime (LocalDateTime startTime, Duration duration){
-        if (duration != null){
+    public LocalDateTime checkEndTime(LocalDateTime startTime, Duration duration) {
+        if (duration != null) {
             return startTime.plus(duration);
         } else {
             return null;
         }
     }
-
-
 
     public LocalDateTime getStartTime() {
         return startTime;
@@ -68,9 +63,6 @@ public class Task {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
-
-
-
 
     public int getIdTask() {
         return idTask;
@@ -103,6 +95,5 @@ public class Task {
     public void setTaskStatus(StatusTask taskStatus) {
         this.taskStatus = taskStatus;
     }
-
 
 }

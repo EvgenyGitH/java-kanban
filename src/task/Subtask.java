@@ -1,8 +1,5 @@
 package task;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 public class Subtask extends Task {
     private int epicGroup;
 
@@ -16,8 +13,6 @@ public class Subtask extends Task {
         this.epicGroup = epicGroup;
     }
 
-
-
     public int getEpicGroup() {
         return epicGroup;
     }
@@ -26,4 +21,3 @@ public class Subtask extends Task {
         this.epicGroup = epicGroup;
     }
 }
-

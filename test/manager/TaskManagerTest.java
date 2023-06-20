@@ -1,15 +1,10 @@
 package manager;
 
-import manager.TaskManager;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.StatusTask;
 import task.Subtask;
 import task.Task;
-
-import java.io.IOException;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,26 +13,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected Task task;
     protected Epic epic2;
     protected Subtask subtask3;
-
-  //  public void setTaskManager() {
-  //  }
-
-
-
-  //  @BeforeEach
- //   public void setUp() throws IOException {
-  //      setTaskManager();
-   /*     HashMap<Integer, Task> tasks = taskManager.getTasksHashMap();
-        HashMap<Integer, Epic> epics = taskManager.getEpicsHashMap();
-        HashMap<Integer, Subtask> subtasks = taskManager.getSubtasksHashMap();
-*/
-  //      task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
-  //      epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
-   //     subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
-
-  //  }
-
-
 
     @Test
     public void testSaveTask() {
@@ -115,7 +90,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, countPrintSubtask, "Ошибка печати");
 
     }
-
 
     @Test
     public void testRemoveAllTask() {
@@ -216,17 +190,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testUpdateById() {
-        task = new Task("19.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        task = new Task("16.02.2023 12:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         epic2 = new Epic("Приготовить коктейль", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
-        subtask3 = new Subtask("19.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
+        subtask3 = new Subtask("16.02.2023 12:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.DONE, 2);
 
         taskManager.saveTask(task);
         taskManager.saveEpic(epic2);
         taskManager.saveSubtask(subtask3);
 
-        Task taskUpData = new Task("19.02.2023 12:00", "150", "Пригласить ДРУЗЕЙ", "Обзвонить по списку", StatusTask.NEW);
+        Task taskUpData = new Task("16.02.2023 12:00", "14", "Пригласить ДРУЗЕЙ", "Обзвонить по списку", StatusTask.NEW);
         Epic epicUpData2 = new Epic("Приготовить НАПИТКИ", "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
-        Subtask subtaskUpData3 = new Subtask("19.02.2023 12:00", "150", "Купить ИНГРИДИЕТЫ", "Купить 1 литр", StatusTask.DONE, 2);
+        Subtask subtaskUpData3 = new Subtask("16.02.2023 12:45", "14", "Купить ИНГРИДИЕТЫ", "Купить 1 литр", StatusTask.DONE, 2);
         taskManager.updateById(1, taskUpData);
         taskManager.updateById(2, epicUpData2);
         taskManager.updateById(3, subtaskUpData3);
@@ -298,6 +272,5 @@ abstract class TaskManagerTest<T extends TaskManager> {
             }
         }
     }
-
 
 }

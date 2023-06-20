@@ -32,7 +32,7 @@ class HttpTaskServerTest {
     public static HttpTaskServer httpTaskServer;
     public static HttpClient client;
     public static final Gson gson = new GsonBuilder()
-          //  .serializeNulls()
+            //  .serializeNulls()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
@@ -54,7 +54,7 @@ class HttpTaskServerTest {
     }
 
     @AfterAll
-    public static void AfterAll(){
+    public static void AfterAll() {
         kvServer.stop();
     }
 
@@ -67,7 +67,7 @@ class HttpTaskServerTest {
 
     @Test
     public void testGetAllTasks() throws IOException, InterruptedException {
-        Task task = new Task("19.02.2023 12:15","14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task = new Task("21.02.2023 14:00", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         String taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -84,8 +84,9 @@ class HttpTaskServerTest {
                 .uri(uri)
                 .POST(HttpRequest.BodyPublishers.ofString(epicJson))
                 .build(), handler);
+        int id = Integer.parseInt(response.body());
 
-        Subtask subtask = new Subtask("19.02.2023 12:15","14","Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 2);
+        Subtask subtask = new Subtask("21.02.2023 14:15", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, id);
         String subtaskJson = gson.toJson(subtask);
 
         uri = URI.create("http://localhost:8090/tasks/subtask/");
@@ -109,11 +110,7 @@ class HttpTaskServerTest {
 
     @Test
     public void testGetAndPostTask() throws IOException, InterruptedException {
-        Task task = new Task("19.02.2023 17:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
-
-/*        Task task = new Task("TitleTask1", "Description", 15L,
-                LocalDateTime.of(2023, 2, 27, 9, 0));    */
-
+        Task task = new Task("02.02.2023 14:30", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         String taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -141,8 +138,63 @@ class HttpTaskServerTest {
     }
 
     @Test
+    public void testGetAndPostTaskUpdate() throws IOException, InterruptedException {
+
+        Task task = new Task("26.02.2023 17:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        String taskJson = gson.toJson(task);
+
+        uri = URI.create("http://localhost:8090/tasks/task/");
+        response = client.send(requestBuilder
+                .uri(uri)
+                .POST(HttpRequest.BodyPublishers.ofString(taskJson))
+                .build(), handler);
+
+        assertEquals(200, response.statusCode(), "Запрос не обработан");
+        assertFalse(response.body().isEmpty(), "Задача не сохранена, не возвращен id");
+        int id = Integer.parseInt(response.body());
+
+        uri = URI.create("http://localhost:8090/tasks/task/?id=" + id);
+        response = client.send(requestBuilder
+                .GET()
+                .uri(uri)
+                .build(), handler);
+
+        task.setIdTask(id);
+        taskJson = gson.toJson(task);
+
+       assertEquals(200, response.statusCode(), "Запрос не обработан");
+        assertEquals(taskJson, response.body(), "Задачи не совпадают");
+
+        //update
+        Task task1 = new Task("26.02.2023 17:00", "14", "Заказать Торт", "Позвонить в кондитеру", StatusTask.NEW);
+        String taskJson1 = gson.toJson(task1);
+
+        uri = URI.create("http://localhost:8090/tasks/task/?id=" + id);
+        response = client.send(requestBuilder
+                .uri(uri)
+                .POST(HttpRequest.BodyPublishers.ofString(taskJson1))
+                .build(), handler);
+
+        assertEquals(200, response.statusCode(), "Запрос не обработан");
+        assertFalse(response.body().isEmpty(), "Задача не сохранена, не возвращен id");
+
+        uri = URI.create("http://localhost:8090/tasks/task/?id=" + id);
+        response = client.send(requestBuilder
+                .GET()
+                .uri(uri)
+                .build(), handler);
+
+        task1.setIdTask(id);
+        taskJson1 = gson.toJson(task1);
+
+        assertEquals(200, response.statusCode(), "Запрос не обработан");
+        assertEquals(taskJson1, response.body(), "Задача не обновлена");
+
+    }
+
+    @Test
     public void testGetAndDeleteTasks() throws IOException, InterruptedException {
-        Task task = new Task("19.02.2023 12:15","14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task = new Task("19.02.2023 09:15", "14", "Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         String taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -168,7 +220,7 @@ class HttpTaskServerTest {
         assertEquals(200, response.statusCode(), "Запрос не обработан");
         assertEquals(2, response.body().length(), "Удаление задач не выполнено");
 
-        task = new Task("19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        task = new Task("19.02.2023 09:30", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -185,12 +237,12 @@ class HttpTaskServerTest {
         response = client.send(request, handler);
 
         assertEquals(200, response.statusCode(), "Запрос не обработан");
-        assertEquals(2, response.body().length(), "Возвращен пустой список задач");
+        assertNotEquals(true, response.body().isEmpty(), "Возвращен пустой список задач");
     }
 
     @Test
     public void testGetHistory() throws IOException, InterruptedException {
-        Task task = new Task("19.02.2023 19:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        Task task = new Task("19.02.2023 19:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         String taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -221,7 +273,7 @@ class HttpTaskServerTest {
 
     @Test
     public void testDeleteAllTasks() throws IOException, InterruptedException {
-        Task task = new Task("19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        Task task = new Task("19.02.2023 08:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         String taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -238,9 +290,9 @@ class HttpTaskServerTest {
                 .uri(uri)
                 .POST(HttpRequest.BodyPublishers.ofString(epicJson))
                 .build(), handler);
+        int id = Integer.parseInt(response.body());
 
-
-        Subtask subtask = new Subtask("19.02.2023 12:15","14","Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, 2);
+        Subtask subtask = new Subtask("19.02.2023 08:45", "14", "Купить Ром/Колу", "Купить 1 литр", StatusTask.NEW, id);
         String subtaskJson = gson.toJson(subtask);
 
         uri = URI.create("http://localhost:8090/tasks/subtask/");
@@ -269,7 +321,7 @@ class HttpTaskServerTest {
 
     @Test
     public void testDeleteTaskByID() throws IOException, InterruptedException {
-        Task task = new Task("19.02.2023 12:00","14","Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
+        Task task = new Task("27.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         String taskJson = gson.toJson(task);
 
         uri = URI.create("http://localhost:8090/tasks/task/");
@@ -299,21 +351,17 @@ class HttpTaskServerTest {
     }
 
 
-//----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
     static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         private final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
-
         @Override
         public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
-            if (localDateTime == null){
+            if (localDateTime == null) {
                 jsonWriter.value("null");
-            }else {
+            } else {
                 jsonWriter.value(localDateTime.format(formatterWriter));
             }
         }
-
-
         @Override
         public LocalDateTime read(JsonReader jsonReader) throws IOException {
             return LocalDateTime.parse(jsonReader.nextString(), formatterWriter);
@@ -321,27 +369,21 @@ class HttpTaskServerTest {
     }
 
     static class DurationAdapter extends TypeAdapter<Duration> {
-
         @Override
         public void write(JsonWriter jsonWriter, Duration duration) throws IOException {
-            if (duration == null){
+            if (duration == null) {
                 jsonWriter.value("null");
-            }else {
+            } else {
                 jsonWriter.value(duration.toMinutes());
             }
         }
-
-
-
         @Override
         public Duration read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.nextString() == null){
+            if (jsonReader.nextString() == null) {
                 return Duration.ofMinutes(0);
-            }else {
+            } else {
                 return Duration.ofMinutes(Long.parseLong(jsonReader.nextString()));
             }
-
         }
     }
-
 }

@@ -1,15 +1,9 @@
 package manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.time.LocalDateTime;
-
 public class Managers {
 
     public static TaskManager getDefault() {
- //       return new InMemoryTaskManager();
- //       return new InMemoryTaskManager();
+        // return new InMemoryTaskManager();
 
         return new HttpTaskManager("http://localhost:8078");
     }
@@ -18,12 +12,9 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-  /*  public static Gson getGson(){
-        GsonBuilder gsonBuilder = new GsonBuilder();
-      //  gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
-        return gsonBuilder.create();
-    }*/
 }
+
+
 
 
 /*

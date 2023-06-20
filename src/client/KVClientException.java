@@ -1,6 +1,6 @@
 package client;
 
-public class KVClientException extends RuntimeException{
+public class KVClientException extends RuntimeException {
 
     public KVClientException(String message) {
         super(message);

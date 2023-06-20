@@ -1,7 +1,5 @@
 package manager;
 
-import manager.FileBackedTasksManager;
-import manager.InMemoryHistoryManager;
 import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.StatusTask;
@@ -13,13 +11,12 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HistoryManagerTest {
-
     @Test
     void checkHistoryBeforeAdd() { //testAdd() {
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
-        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("19.02.2023 11:45", "14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
@@ -36,14 +33,14 @@ class HistoryManagerTest {
 
         assertEquals(0, inMemoryHistoryManager.getHistoryMap().size(), "История не пустая! ");
 
-
     }
+
     @Test
     void checkHistoryAfterAdd() { //testAdd() {
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
-        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("19.02.2023 11:45", "14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
@@ -64,11 +61,11 @@ class HistoryManagerTest {
     }
 
     @Test
-    void checkHistoryAfterDoubleAddOneTask(){
+    void checkHistoryAfterDoubleAddOneTask() {
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
-        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("19.02.2023 11:45", "14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
@@ -95,7 +92,7 @@ class HistoryManagerTest {
 
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
-        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("19.02.2023 11:45", "14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);
@@ -139,7 +136,7 @@ class HistoryManagerTest {
 
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(new File("src/resources/backup.csv"));
-        Task task1 = new Task("Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
+        Task task1 = new Task("19.02.2023 11:45", "14","Позвать гостей", "Обзвонить по списку", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task1);
         Task task2 = new Task("19.02.2023 12:00", "14", "Заказать пиццу", "Позвонить в ресторан", StatusTask.NEW);
         fileBackedTasksManager.saveTask(task2);

@@ -1,18 +1,14 @@
 package task;
 
-import manager.Managers;
+import manager.InMemoryTaskManager;
 import manager.TaskManager;
 import org.junit.jupiter.api.Test;
-import task.Epic;
-import task.StatusTask;
-import task.Subtask;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
 
-
-    TaskManager taskManager = Managers.getDefault();
+    TaskManager taskManager = new InMemoryTaskManager();
 
     @Test // Epic status NEW если нет Subtask-ов
     public void epicStatusShouldBeNewIfSubtaskIsAbsent() {
@@ -20,6 +16,7 @@ class EpicTest {
         Epic epic = new Epic("Приготовить коктейль",
                 "Купить ингредиенты в соответствии с рецептом", StatusTask.NEW);
         taskManager.saveEpic(epic);
+
         if (epic.getSubTaskGroup().isEmpty()) {
             epicStatus = epic.getTaskStatus();
         }

@@ -3,11 +3,9 @@ package server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import manager.Managers;
 import manager.TaskManager;
@@ -15,11 +13,8 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +22,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.logging.Handler;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -41,14 +35,14 @@ public class HttpTaskServer {
     private final Gson gson;
 
 
-    public HttpTaskServer () throws IOException {
+    public HttpTaskServer() throws IOException {
         httpServer = HttpServer.create();
-        httpServer.bind(new InetSocketAddress(PORT),0);
+        httpServer.bind(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", this::TaskHandler);
         taskManager = Managers.getDefault();
         gson = new GsonBuilder()
-             //   .setPrettyPrinting()
-              //  .serializeNulls()
+                //  .setPrettyPrinting()
+                //  .serializeNulls()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
 
@@ -56,21 +50,20 @@ public class HttpTaskServer {
 
     }
 
-
-    public void TaskHandler (HttpExchange exchange) {
+    public void TaskHandler(HttpExchange exchange) {
         try {
             String requestMethod = exchange.getRequestMethod();
 
-            switch (requestMethod){
-                case "GET":{
+            switch (requestMethod) {
+                case "GET": {
                     handleGET(exchange);
                     break;
                 }
-                case "POST":{
+                case "POST": {
                     handlePOST(exchange);
                     break;
                 }
-                case "DELETE":{
+                case "DELETE": {
                     handleDELETE(exchange);
                     break;
                 }
@@ -80,7 +73,7 @@ public class HttpTaskServer {
                     exchange.sendResponseHeaders(405, 0);
                 }
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
             exchange.close();
@@ -88,7 +81,7 @@ public class HttpTaskServer {
     }
 
 
-    public void handleGET (HttpExchange exchange) {
+    public void handleGET(HttpExchange exchange) {
         try {
             String path = exchange.getRequestURI().getPath();
             String query = exchange.getRequestURI().getQuery();
@@ -106,30 +99,28 @@ public class HttpTaskServer {
                     if (Pattern.matches("^id=\\d+$", query)) {
                         String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (id != -1 && taskManager.getTaskById(id)!=null) {
+                        if (id != -1 && taskManager.getTaskById(id) != null) {
                             String response = gson.toJson(taskManager.getTaskById(id));
                             sendText(exchange, response);
                             System.out.println("Запрос успешно выполнен.");
                             break;
-                        }else {
+                        } else {
                             System.out.println("Задачи по указанному id не существует");
                             exchange.sendResponseHeaders(404, 0);
                             break;
                         }
-
                     }
-
                 }
                 case "epic": {
                     if (Pattern.matches("^id=\\d+$", query)) {
                         String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (id != -1 && taskManager.getTaskById(id)!=null) {
+                        if (id != -1 && taskManager.getTaskById(id) != null) {
                             String response = gson.toJson(taskManager.getTaskById(id));
                             sendText(exchange, response);
                             System.out.println("Запрос успешно выполнен.");
                             break;
-                        }else {
+                        } else {
                             System.out.println("Задачи по указанному id не существует");
                             exchange.sendResponseHeaders(404, 0);
                             break;
@@ -140,12 +131,12 @@ public class HttpTaskServer {
                     if (Pattern.matches("^id=\\d+$", query)) {
                         String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (id != -1 && taskManager.getTaskById(id)!=null) {
+                        if (id != -1 && taskManager.getTaskById(id) != null) {
                             String response = gson.toJson(taskManager.getTaskById(id));
                             sendText(exchange, response);
                             System.out.println("Запрос успешно выполнен.");
                             break;
-                        }else {
+                        } else {
                             System.out.println("Задачи по указанному id не существует");
                             exchange.sendResponseHeaders(404, 0);
                             break;
@@ -172,14 +163,14 @@ public class HttpTaskServer {
                     exchange.sendResponseHeaders(405, 0);
                 }
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
             exchange.close();
         }
     }
 
-    public void handlePOST (HttpExchange exchange) {
+    public void handlePOST(HttpExchange exchange) {
         try {
             InputStream inputStream = exchange.getRequestBody();
             String query = exchange.getRequestURI().getQuery();
@@ -195,69 +186,66 @@ public class HttpTaskServer {
                     System.out.println("\n/tasks/task/");
                     Task task = gson.fromJson(body, Task.class);
 
-                    if (query !=null){
+                    if (query != null) {
                         if (Pattern.matches("^id=\\d+$", query)) {
                             String pathId = query.replaceFirst("id=", "");
                             int id = parsePathId(pathId);
-                            if (id != -1 && id>0) {
+                            if (id != -1 && id > 0) {
                                 taskManager.updateById(id, task);
                                 sendText(exchange, String.valueOf(id)); //"Задача task - обновлена"
                             }
-                    }
+                        }
 
                     } else {
                         taskManager.saveTask(task);
-                        sendText(exchange, String.valueOf(task.getIdTask()) ); //"task - добавлена"
+                        sendText(exchange, String.valueOf(task.getIdTask())); //"task - добавлена"
                     }
                     break;
                 case "epic":
                     System.out.println("\n/tasks/epic/");
                     Epic epic = gson.fromJson(body, Epic.class);
-                        if (query !=null){
-                            if (Pattern.matches("^id=\\d+$", query)) {
-                                String pathId = query.replaceFirst("id=", "");
-                                int id = parsePathId(pathId);
-                                if (id != -1 && id>0) {
-                                    taskManager.updateById(id, epic);
-                                    sendText(exchange, "Задача epic - обновлена");
-                                }
+                    if (query != null) {
+                        if (Pattern.matches("^id=\\d+$", query)) {
+                            String pathId = query.replaceFirst("id=", "");
+                            int id = parsePathId(pathId);
+                            if (id != -1 && id > 0) {
+                                taskManager.updateById(id, epic);
+                                sendText(exchange, "Задача epic - обновлена"); //"Задача epic - обновлена"
                             }
+                        }
                     } else {
                         taskManager.saveEpic(epic);
-                        sendText(exchange, "epic - добавлена");
+                        sendText(exchange, String.valueOf(epic.getIdTask())); //"epic - добавлена"
                     }
                     break;
                 case "subtask":
                     System.out.println("\n/tasks/subtask/");
                     Subtask subtask = gson.fromJson(body, Subtask.class);
 
-                        if (query !=null){
-                            if (Pattern.matches("^id=\\d+$", query)) {
-                                String pathId = query.replaceFirst("id=", "");
-                                int id = parsePathId(pathId);
-                                if (id != -1 && id>0) {
-                                    taskManager.updateById(id, subtask);
-                                    sendText(exchange, "Задача subtask - обновлена");
-                                }
+                    if (query != null) {
+                        if (Pattern.matches("^id=\\d+$", query)) {
+                            String pathId = query.replaceFirst("id=", "");
+                            int id = parsePathId(pathId);
+                            if (id != -1 && id > 0) {
+                                taskManager.updateById(id, subtask);
+                                sendText(exchange, "Задача subtask - обновлена");
                             }
-
-
-
+                        }
                     } else {
                         taskManager.saveSubtask(subtask);
-                        sendText(exchange, "subtask - добавлена");
+                        sendText(exchange, String.valueOf(subtask.getIdTask())); //"subtask - добавлена"
                     }
                     break;
             }
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
             exchange.close();
         }
     }
 
-    public void handleDELETE (HttpExchange exchange) {
+    public void handleDELETE(HttpExchange exchange) {
         try {
             String path = exchange.getRequestURI().getPath();
             String query = exchange.getRequestURI().getQuery();
@@ -282,17 +270,17 @@ public class HttpTaskServer {
                     sendText(exchange, response);
                 }
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
             exchange.close();
         }
     }
 
-    private int parsePathId (String pathId){
-        try{
+    private int parsePathId(String pathId) {
+        try {
             return Integer.parseInt(pathId);
-        }catch(NumberFormatException exception){
+        } catch (NumberFormatException exception) {
             return -1;
         }
     }
@@ -301,7 +289,7 @@ public class HttpTaskServer {
         return new String(h.getRequestBody().readAllBytes(), UTF_8);
     }
 
-    protected void sendText(HttpExchange h, String text ) throws IOException {
+    protected void sendText(HttpExchange h, String text) throws IOException {
         byte[] resp = text.getBytes(UTF_8);
         h.getResponseHeaders().add("Content-Type", "application/json");
         h.sendResponseHeaders(200, resp.length);
@@ -313,7 +301,8 @@ public class HttpTaskServer {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         httpServer.start();
     }
-    public void stop(){
+
+    public void stop() {
         System.out.println("Cервер на порту " + PORT + "остановлен.");
         httpServer.stop(0);
     }
@@ -326,11 +315,12 @@ public class HttpTaskServer {
 
     public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         private final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
         @Override
         public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
-            if (localDateTime == null){
+            if (localDateTime == null) {
                 jsonWriter.value("null");
-            }else {
+            } else {
                 jsonWriter.value(localDateTime.format(formatterWriter));
             }
         }
@@ -344,9 +334,9 @@ public class HttpTaskServer {
     public class DurationAdapter extends TypeAdapter<Duration> {
         @Override
         public void write(JsonWriter jsonWriter, Duration duration) throws IOException {
-            if (duration == null){
+            if (duration == null) {
                 jsonWriter.value("null");
-            }else {
+            } else {
                 jsonWriter.value(duration.toMinutes());
             }
         }
